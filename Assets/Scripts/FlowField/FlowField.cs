@@ -2,7 +2,7 @@
 
 public class FlowField : MonoBehaviour
 {
-    public enum FlowFieldType {random, wave, center_attract, center_repel};
+    public enum FlowFieldType {random, wave, center_attract, center_repel, perlin};
     
     public int width = 20;
     public int height = 20;
@@ -46,7 +46,16 @@ public class FlowField : MonoBehaviour
                         float distFromCenter = Vector2.Distance(new Vector2(x, y), new Vector2(width / 2, height / 2));
                         scalarField[x, y] = distFromCenter / (width / 2);
                         break;
-
+                    case FlowFieldType.perlin: 
+                        var scaled_x = x * 0.1f;
+                        var scaled_y = y * 0.1f;
+                        
+                        // Generate Perlin noise for each grid cell
+                        var noise_val = Mathf.PerlinNoise(scaled_x, scaled_y);
+                        
+                        // Scale Perlin value to the desired range, e.g., between -1 and 1
+                        scalarField[x, y] = Mathf.Lerp(-1f, 1f, noise_val);
+                        break;
                     default:
                         scalarField[x, y] = 0; // Default empty field
                         break;

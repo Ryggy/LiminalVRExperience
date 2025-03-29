@@ -288,6 +288,10 @@ GameObject:
   - component: {fileID: 276205258}
   - component: {fileID: 276205260}
   - component: {fileID: 276205259}
+  - component: {fileID: 276205264}
+  - component: {fileID: 276205263}
+  - component: {fileID: 276205262}
+  - component: {fileID: 276205261}
   m_Layer: 0
   m_Name: Museum Wall
   m_TagString: Untagged
@@ -354,6 +358,58 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 276205257}
   m_Mesh: {fileID: -6728205333505214214, guid: 194ca94cf3fc47a4aad657e15933a2ef, type: 3}
+--- !u!65 &276205261
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 276205257}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.06560024, y: 74.98759, z: 1.0000846}
+  m_Center: {x: -0.46720052, y: 37.993786, z: 0.00004227956}
+--- !u!65 &276205262
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 276205257}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.0003688, y: 74.98758, z: 0.06805563}
+  m_Center: {x: 0.00018441677, y: 37.99378, z: -0.46597275}
+--- !u!65 &276205263
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 276205257}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.06833951, y: 74.98759, z: 1.0000846}
+  m_Center: {x: 0.46619937, y: 37.993786, z: 0.00004227956}
+--- !u!65 &276205264
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 276205257}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.0003688, y: 74.98758, z: 0.06453264}
+  m_Center: {x: 0.00018441677, y: 37.993774, z: 0.4678192}
 --- !u!1 &495676699
 GameObject:
   m_ObjectHideFlags: 0
@@ -448,6 +504,7 @@ GameObject:
   - component: {fileID: 560537862}
   - component: {fileID: 560537864}
   - component: {fileID: 560537863}
+  - component: {fileID: 560537865}
   m_Layer: 0
   m_Name: Museum Floor
   m_TagString: Untagged
@@ -514,6 +571,19 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 560537861}
   m_Mesh: {fileID: -8443667876339503124, guid: d28555dbe1dd5ce459ac81faa9190507, type: 3}
+--- !u!65 &560537865
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 560537861}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &624160921
 GameObject:
   m_ObjectHideFlags: 0
@@ -708,6 +778,25 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 869756058}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &869756060 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: 3a72381d911711840b28f3b2ac9af862,
+    type: 3}
+  m_PrefabInstance: {fileID: 869756058}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &869756061
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 869756060}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.37500003, y: 56.25001, z: 0.06091675}
+  m_Center: {x: 0, y: 28.041464, z: -0.39413476}
 --- !u!1 &1184624987
 GameObject:
   m_ObjectHideFlags: 0
@@ -719,6 +808,8 @@ GameObject:
   - component: {fileID: 1184624988}
   - component: {fileID: 1184624990}
   - component: {fileID: 1184624989}
+  - component: {fileID: 1184624992}
+  - component: {fileID: 1184624991}
   m_Layer: 0
   m_Name: Museum Wall Entrance
   m_TagString: Untagged
@@ -785,6 +876,32 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1184624987}
   m_Mesh: {fileID: -4057048755619138896, guid: 194ca94cf3fc47a4aad657e15933a2ef, type: 3}
+--- !u!65 &1184624991
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1184624987}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.5625001, y: 45, z: 0.097158}
+  m_Center: {x: -0.21875004, y: 23, z: 0.45142144}
+--- !u!65 &1184624992
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1184624987}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.09728587, y: 45.000004, z: 0.6875002}
+  m_Center: {x: -0.45135736, y: 23.000002, z: 0.15625004}
 --- !u!1 &1429849359
 GameObject:
   m_ObjectHideFlags: 0
@@ -1130,7 +1247,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1

@@ -23,14 +23,15 @@ public class FlowFieldLines : MonoBehaviour
         // Instantiate particles 
         for (int i = 0; i < particleCount; i++)
         {
-            Vector2 spawnPos = new Vector2(
-                Random.Range(0, flowField.width * flowField.cellSize),
-                Random.Range(0, flowField.height * flowField.cellSize)
+            Vector3 spawnPos = new Vector3(
+                Random.Range(0f, flowField.width * flowField.cellSize),
+                Random.Range(0f, flowField.height * flowField.cellSize),
+                0
             );
 
             // Randomly select a prefab 
             GameObject selectedPrefab = particlePrefabs[Random.Range(0, particlePrefabs.Length)];
-            particles[i] = Instantiate(selectedPrefab, spawnPos, Quaternion.identity, transform);
+            particles[i] = Instantiate(selectedPrefab,  transform.position + spawnPos, Quaternion.identity, transform);
             velocities[i] = Vector2.zero;
         }
     }

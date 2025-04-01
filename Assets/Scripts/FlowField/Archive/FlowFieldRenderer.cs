@@ -13,7 +13,10 @@ public class FlowFieldRenderer : MonoBehaviour
 
     void Start()
     {
-        GenerateArrows();
+        if (debugVector)
+        {
+            GenerateArrows();
+        }
     }
 
     void Update()

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using Valve.VR.Extras;
 
 public class FlowFieldTest : MonoBehaviour
 {
@@ -43,6 +44,11 @@ public class FlowFieldTest : MonoBehaviour
         int x = Mathf.Clamp(Mathf.FloorToInt(position.x / scale), 0, cols - 1);
         int y = Mathf.Clamp(Mathf.FloorToInt(position.y / scale), 0, rows - 1);
         return vectors[x, y];
+    }
+
+    public void SetForce(Vector2 position, Vector2 force)
+    {
+        vectors[(int)position.x, (int)position.y] = force;
     }
 
     void OnDrawGizmos()

@@ -12,6 +12,11 @@ public class FlowFieldManager : MonoBehaviour
     private List<Particle> particles;
     private ParticleSystem.Particle[] particleArray;
 
+    [SerializeField] public Color[] colourOptions = new Color[]
+    {
+        Color.red, Color.green, Color.blue, Color.yellow, Color.cyan, Color.magenta
+    };
+    
     void Start()
     {
         particles = new List<Particle>();
@@ -20,7 +25,7 @@ public class FlowFieldManager : MonoBehaviour
         for (int i = 0; i < numParticles; i++)
         {
             Vector2 startPos = new Vector2(Random.Range(0, fieldWidth), Random.Range(0, fieldHeight));
-            particles.Add(new Particle(startPos, 0.02f));
+            particles.Add(new Particle(this, startPos, 0.01f));
         }
     }
 

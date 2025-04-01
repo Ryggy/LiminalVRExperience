@@ -9,14 +9,16 @@ public class Particle
     private Vector2 acceleration;
     private float maxSpeed;
     private ParticleSystem.Particle particle;
-
-    public Particle(Vector2 start, float maxSpeed)
+    private Color colour;
+    
+    public Particle(FlowFieldManager flowFieldManager ,Vector2 start, float maxSpeed)
     {
         this.maxSpeed = maxSpeed;
         Position = start;
         velocity = Vector2.zero;
         acceleration = Vector2.zero;
-        particle = new ParticleSystem.Particle { startSize = 1f, startColor = Color.white, position = Position };
+        colour = flowFieldManager.colourOptions[Random.Range(0, flowFieldManager.colourOptions.Length)];
+        particle = new ParticleSystem.Particle { startSize = 0.1f, startColor = colour, position = Position };
     }
 
     public void Update()
@@ -35,10 +37,10 @@ public class Particle
 
     public void Edges(float width, float height)
     {
-        if (Position.x > width) Position.x = Random.Range(0, width);
-        if (Position.x < 0) Position.x = Random.Range(0, width);;
-        if (Position.y > height) Position.y = Random.Range(0, height);;
-        if (Position.y < 0) Position.y = Random.Range(0, height);
+        if (Position.x > width) Position = new Vector2(Random.Range(0, width), Random.Range(0, height));
+        if (Position.x < 0) Position = new Vector2(Random.Range(0, width), Random.Range(0, height));
+        if (Position.y > height) Position = new Vector2(Random.Range(0, width), Random.Range(0, height));
+        if (Position.y < 0) Position = new Vector2(Random.Range(0, width), Random.Range(0, height));
     }
 
     public void Follow(FlowFieldTest field)

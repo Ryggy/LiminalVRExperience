@@ -7,6 +7,8 @@ public class FlowFieldRenderer : MonoBehaviour
     public GameObject linePrefab; // Prefab for LineRenderer
     public float arrowScale = 0.5f;
 
+    public bool debugVector = false;
+    
     private List<LineRenderer> arrows = new List<LineRenderer>();
 
     void Start()
@@ -16,7 +18,10 @@ public class FlowFieldRenderer : MonoBehaviour
 
     void Update()
     {
-        UpdateArrows();
+        if (debugVector)
+        {
+            UpdateArrows();
+        }
     }
 
     void GenerateArrows()
@@ -60,7 +65,7 @@ public class FlowFieldRenderer : MonoBehaviour
             {
                 if (index >= arrows.Count) return;
 
-                Vector3 position = new Vector3(x * flowField.cellSize, y * flowField.cellSize, 0);
+                Vector3 position = transform.position + new Vector3(x * flowField.cellSize, y * flowField.cellSize, 0);
                 Vector2 direction = flowField.GetFlowDirection(x, y) * arrowScale;
                 Vector3 endPosition = position + (Vector3)direction;
 

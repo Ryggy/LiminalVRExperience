@@ -18,7 +18,7 @@ public class Particle
         velocity = Vector2.zero;
         acceleration = Vector2.zero;
         colour = flowFieldManager.colourOptions[Random.Range(0, flowFieldManager.colourOptions.Length)];
-        particle = new ParticleSystem.Particle { startSize = 0.1f, startColor = colour, position = Position };
+        particle = new ParticleSystem.Particle { startSize = 0.01f, startColor = colour, position = Position };
     }
 
     public void Update()

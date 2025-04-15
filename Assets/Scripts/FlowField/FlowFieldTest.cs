@@ -106,17 +106,17 @@ public class FlowFieldTest : MonoBehaviour
             }
         }
         // fire stuff
-        Color GetFlickeringColor()
-        {
-            float lerpTime = Mathf.PingPong(Time.time * 0.5f, 1f); 
-            Color lerpedColor1 = Color.Lerp(startColor, middleColor, lerpTime);
-            Color lerpedColor2 = Color.Lerp(middleColor, endColor, lerpTime);
-            return Color.Lerp(lerpedColor1, lerpedColor2, lerpTime);
-        }
+
+    }
+    public Color GetFlickeringColor()
+    {
+        float lerpTime = Mathf.PingPong(Time.time * 0.5f, 1f); 
+        Color lerpedColor1 = Color.Lerp(startColor, middleColor, lerpTime);
+        Color lerpedColor2 = Color.Lerp(middleColor, endColor, lerpTime);
+        return Color.Lerp(lerpedColor1, lerpedColor2, lerpTime);
     }
 
-
-    bool IsInFireMask(int x, int y)
+    public bool IsInFireMask(int x, int y)
     {
         int midX = cols / 2;
         int baseY = 5;

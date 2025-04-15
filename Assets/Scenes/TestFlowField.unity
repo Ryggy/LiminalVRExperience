@@ -5308,7 +5308,6 @@ GameObject:
   - component: {fileID: 1949151991}
   - component: {fileID: 1949151992}
   - component: {fileID: 1949151990}
-  - component: {fileID: 1949151993}
   m_Layer: 0
   m_Name: FlowField
   m_TagString: Untagged
@@ -5333,7 +5332,14 @@ MonoBehaviour:
   scale: 0.1
   increment: 0.1
   showFlowField: 1
-  showOutline: 1
+  fireScale: 3
+  flickerSpeed: 7
+  flickerAmount: 3
+  fireBaseWidth: 8
+  fireTipWidth: 0.3
+  startColor: {r: 1, g: 0, b: 0, a: 1}
+  middleColor: {r: 1, g: 0.647, b: 0, a: 1}
+  endColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   outlineType: 0
 --- !u!4 &1949151991
 Transform:
@@ -5366,24 +5372,8 @@ MonoBehaviour:
   fieldWidth: 10
   fieldHeight: 8
   particleSystem: {fileID: 1453057408}
-  fireOutline: {fileID: 1949151993}
   colourOptions:
   - {r: 0.9528302, g: 0.4179868, b: 0.4179868, a: 1}
   - {r: 0.30907324, g: 0.9245283, b: 0.3009078, a: 1}
   - {r: 0, g: 0.50669, b: 1, a: 1}
   - {r: 1, g: 0.950763, b: 0.3820755, a: 1}
---- !u!114 &1949151993
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1949151989}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 934945d90646cae49b632f43c5323433, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fireTexture: {fileID: 2800000, guid: 2bcffe3b526e44e46909497f4be2a4e7, type: 3}
-  worldWidth: 600
-  worldHeight: 400

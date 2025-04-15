@@ -48,6 +48,10 @@ public class Particle
         Vector2 force = field.GetForce(Position);
         ApplyForce(force);
     }
+    public Vector2 GetPosition()
+    {
+        return Position;
+    }
 
     public ParticleSystem.Particle GetParticle() => particle;
 }

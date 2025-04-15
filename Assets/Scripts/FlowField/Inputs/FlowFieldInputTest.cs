@@ -10,9 +10,11 @@ public class FlowFieldInputTest : MonoBehaviour
     private bool isDragging = false;
     [Range(1, 10)]
     public int influenceRadius = 1;
-    
-    
-    
+
+    // Store previous drag direction 
+    private Vector2 previousDragDirection = Vector2.zero;
+    public float smoothFactor = 0.1f; // Controls the smoothing 
+
     void Update()
     {
         // Start dragging
@@ -20,9 +22,9 @@ public class FlowFieldInputTest : MonoBehaviour
         {
             startMouseWorldPos = GetMouseWorldPosition();
             isDragging = true;
+            previousDragDirection = Vector2.zero; // Reset direction when starting drag
         }
 
-      
         if (isDragging)
         {
             Vector3 currentMouseWorldPos = GetMouseWorldPosition();
@@ -31,7 +33,12 @@ public class FlowFieldInputTest : MonoBehaviour
             if (dragDirection.sqrMagnitude > 0.001f) 
             {
                 Vector2 gridPos = WorldToGrid(startMouseWorldPos);
-                ApplyForceToArea(gridPos, dragDirection.normalized);
+                
+                // Smooth the direction to avoid rapid changes
+                Vector2 smoothedDirection = Vector2.Lerp(previousDragDirection, dragDirection.normalized, smoothFactor);
+
+                ApplyForceToArea(gridPos, smoothedDirection);
+                previousDragDirection = smoothedDirection; 
                 startMouseWorldPos = currentMouseWorldPos; // continuous drag
             }
         }
@@ -42,11 +49,10 @@ public class FlowFieldInputTest : MonoBehaviour
             isDragging = false;
         }
     }
-    
-    // rasycast
+
+    // Raycast 
     private Vector3 GetMouseWorldPosition()
     {
-        // Cast a ray from camera 
         Vector3 mousePos = Input.mousePosition;
         Ray ray = Camera.main.ScreenPointToRay(mousePos);
     
@@ -72,10 +78,8 @@ public class FlowFieldInputTest : MonoBehaviour
 
         return new Vector2(x, y);
     }
-    
-    
-    
-    // determines size of brush
+
+
     private void ApplyForceToArea(Vector2 centerGridPos, Vector2 direction)
     {
         int centerX = (int)centerGridPos.x;
@@ -88,7 +92,7 @@ public class FlowFieldInputTest : MonoBehaviour
                 int targetX = centerX + x;
                 int targetY = centerY + y;
 
-              
+         
                 if (x * x + y * y <= influenceRadius * influenceRadius)
                 {
                     // Clamp 

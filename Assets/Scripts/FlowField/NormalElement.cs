@@ -25,6 +25,6 @@ public class NormalElement : IElement
 
     public void DrawGizmos(Vector2[,] vectors, int cols, int rows, float scale, FlowFieldTest owner)
     {
-        // No overlay needed; base gizmos are enough
+      
     }
 }

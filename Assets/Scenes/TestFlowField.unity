@@ -242,8 +242,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flowField: {fileID: 1949151990}
-  influenceRadius: 9
-  smoothFactor: 10
+  influenceRadius: 2
+  smoothFactor: 1
 --- !u!4 &830928692
 Transform:
   m_ObjectHideFlags: 0
@@ -5332,14 +5332,14 @@ MonoBehaviour:
   scale: 0.1
   increment: 0.1
   showFlowField: 1
-  fireScale: 3
-  flickerSpeed: 7
-  flickerAmount: 3
-  fireBaseWidth: 8
-  fireTipWidth: 0.3
-  startColor: {r: 1, g: 0, b: 0, a: 1}
+  fireScale: 9
+  flickerSpeed: 0
+  flickerAmount: 0
+  fireBaseWidth: 0
+  fireTipWidth: -2
+  startColor: {r: 1, g: 0.14576916, b: 0, a: 1}
   middleColor: {r: 1, g: 0.647, b: 0, a: 1}
-  endColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  endColor: {r: 1, g: 0.5013487, b: 0, a: 1}
   outlineType: 0
 --- !u!4 &1949151991
 Transform:

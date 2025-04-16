@@ -11,36 +11,28 @@ public class Particle
     private ParticleSystem.Particle particle;
     private Color colour;
 
-    // test Varaibles
+    // Fire-related variables
     private bool isStuck = false;
     private bool wasInFireLastFrame = false;
     private Color originalColor;
     private Vector2 stuckPosition;
-    
-    public Particle(FlowFieldManager flowFieldManager ,Vector2 start, float maxSpeed)
+    private float randomSeed;
+    private float fireAge = 0f;
+    private const float fireLifespan = 3f;
+    private bool shrinking = false;
+
+    public Particle(FlowFieldManager flowFieldManager, Vector2 start, float maxSpeed)
     {
         this.maxSpeed = maxSpeed;
         Position = start;
         velocity = Vector2.zero;
         acceleration = Vector2.zero;
         colour = flowFieldManager.colourOptions[Random.Range(0, flowFieldManager.colourOptions.Length)];
-        originalColor = colour; // Save  color
+        originalColor = colour;
         particle = new ParticleSystem.Particle { startSize = 0.1f, startColor = colour, position = Position };
+        randomSeed = Random.Range(0f, 1000f);
     }
 
-    
-    // original update
-    // public void Update()
-    // {
-    //     velocity += acceleration;
-    //     velocity = Vector2.ClampMagnitude(velocity, maxSpeed);
-    //     Position += velocity;
-    //     acceleration *= 0;
-    //     particle.position = Position;
-    // }
-
-    
-    // testing stuff below
     public void Update(FlowFieldTest field)
     {
         bool isInFireNow = false;
@@ -56,23 +48,23 @@ public class Particle
 
                 if (!isStuck)
                 {
-                   
                     stuckPosition = GetUniqueFirePosition(field);
                     Position = stuckPosition;
                     isStuck = true;
+                    fireAge = 0f;
+                    shrinking = false;
                 }
 
-            
                 Color fireColor = field.GetFlickeringColor();
                 particle.startColor = fireColor;
             }
         }
 
-  
         if (!isInFireNow && wasInFireLastFrame)
         {
             isStuck = false;
             particle.startColor = originalColor;
+            particle.startSize = 0.1f;
         }
 
         wasInFireLastFrame = isInFireNow;
@@ -87,11 +79,51 @@ public class Particle
         }
         else
         {
-   
-            particle.position = stuckPosition;
+            fireAge += Time.deltaTime;
+
+            float flickerSpeed = 3f;
+            float flickerAmount = 0.3f;
+            Vector2 flicker = new Vector2(
+                Mathf.Sin(Time.time * flickerSpeed + randomSeed) * flickerAmount,
+                Mathf.Cos(Time.time * flickerSpeed + randomSeed) * flickerAmount
+            );
+
+            Vector2 upwardDrift = new Vector2(0, fireAge * 0.5f);
+            particle.position = stuckPosition + flicker + upwardDrift;
+
+            if (fireAge >= fireLifespan)
+            {
+                shrinking = true;
+            }
+
+            // if (shrinking)
+            // {
+            //     particle.startSize = Mathf.Max(0f, particle.startSize - Time.deltaTime * 0.05f);
+            // }
+            
+            if (shrinking)
+            {
+                particle.startSize = Mathf.Max(0f, particle.startSize - Time.deltaTime * 0.05f);
+
+                // Once particle gets very small, reset it to normal behavior
+                if (particle.startSize <= 0.05f) // When it gets small enough
+                {
+                    ResetParticleToOriginal(); // Reset size and color to original values
+                }
+            }
         }
+        
     }
+    // Reset particle to original size, color, and random position
+    private void ResetParticleToOriginal()
+    {
+        particle.startColor = originalColor;
+        particle.startSize = 0.1f; // Original size
+        Position = new Vector2(Random.Range(0, 100), Random.Range(0, 100)); // Random position
+    }
+
     private static HashSet<Vector2> takenFirePositions = new HashSet<Vector2>();
+
     private Vector2 GetUniqueFirePosition(FlowFieldTest field)
     {
         int attempts = 0;
@@ -115,10 +147,8 @@ public class Particle
             attempts++;
         }
 
-        return Position; 
+        return Position; // fallback
     }
-    // testing above
-    
 
     public void ApplyForce(Vector2 force)
     {

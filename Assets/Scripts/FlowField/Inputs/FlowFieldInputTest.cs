@@ -15,6 +15,7 @@ public class FlowFieldInputTest : MonoBehaviour
     private Vector2 previousDragDirection = Vector2.zero;
     public float smoothFactor = 10f; // Controls the smoothing 
 
+
     void Update()
     {
         // Start dragging

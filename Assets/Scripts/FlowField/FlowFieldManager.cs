@@ -34,11 +34,12 @@ public class FlowFieldManager : MonoBehaviour
         for (int i = 0; i < particles.Count; i++)
         {
             particles[i].Follow(flowField);
-            particles[i].Update();
+            particles[i].Update(flowField); 
             particles[i].Edges(fieldWidth, fieldHeight);
             particleArray[i] = particles[i].GetParticle();
         }
 
         particleSystem.SetParticles(particleArray, particleArray.Length);
     }
+    
 }

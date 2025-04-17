@@ -1,70 +1,98 @@
 ﻿using UnityEngine;
 using Liminal.SDK.VR;
-using Liminal.SDK.VR.Avatars;
 using Liminal.SDK.VR.Input;
-
+using TMPro;
 public class FlowFieldInputVR : MonoBehaviour
 {
     public FlowFieldTest flowField;
-    public float maxRaycastDistance = 10f;
     public int influenceRadius = 1;
 
     private Vector3 startWorldPos;
     private bool isDragging = false;
 
-    private IVRInputDevice inputDevice => VRDevice.Device.PrimaryInputDevice;
-    private Transform handTransform => VRAvatar.Active.PrimaryHand.Transform;
+    private IVRInputDevice rightHandInput;
+    
+    public TextMeshProUGUI debugText; 
 
+    private void Start()
+    {
+        rightHandInput = VRDevice.Device?.PrimaryInputDevice;
+    }
     void Update()
     {
-        if (inputDevice == null || handTransform == null)
+        if (rightHandInput == null || rightHandInput.Pointer == null)
             return;
 
-        // Start drag
-        if (inputDevice.GetButtonDown(VRButton.Trigger))
+        var raycastResult = rightHandInput.Pointer.CurrentRaycastResult;
+        string message = "";
+
+        if (raycastResult.isValid)
         {
-            if (TryGetPointerWorldPosition(out startWorldPos))
+            Vector3 hitPos = raycastResult.worldPosition;
+            message += $"Pointer Hit: {hitPos:F2}\n";
+
+            // Convert to grid position
+            int gridX = Mathf.FloorToInt(hitPos.x / flowField.scale);
+            int gridY = Mathf.FloorToInt(hitPos.y / flowField.scale);
+
+            // Check bounds
+            if (gridX >= 0 && gridX < flowField.cols && gridY >= 0 && gridY < flowField.rows)
             {
-                isDragging = true;
+                message += $"Grid Position: ({gridX}, {gridY})\n";
+            }
+            else
+            {
+                message += "Grid Position: Out of bounds\n";
             }
         }
 
-        // Dragging
-        if (isDragging)
+        if (rightHandInput.GetButtonDown(VRButton.Trigger))
         {
-            if (TryGetPointerWorldPosition(out Vector3 currentWorldPos))
-            {
-                Vector3 dragDirection = currentWorldPos - startWorldPos;
+            message += "Trigger Down\n";
 
-                if (dragDirection.sqrMagnitude > 0.001f)
-                {
-                    Vector2 gridPos = WorldToGrid(startWorldPos);
-                    ApplyForceToArea(gridPos, dragDirection.normalized);
-                    startWorldPos = currentWorldPos;
-                }
+        }
+
+        if (rightHandInput.GetButton(VRButton.Trigger))
+        {
+            message += "Dragging\n";
+        }
+        
+        if (rightHandInput.GetButtonUp(VRButton.Trigger))
+        {
+            message += "Trigger Up\n";
+        }
+
+        if (debugText != null)
+        {
+            debugText.text = message;
+        }
+        
+        // Start dragging
+        if (rightHandInput.GetButtonDown(VRButton.Trigger) && raycastResult.isValid)
+        {
+            startWorldPos = raycastResult.worldPosition;
+            isDragging = true;
+        }
+
+        // While dragging
+        if (isDragging && raycastResult.isValid)
+        {
+            Vector3 currentWorldPos = raycastResult.worldPosition;
+            Vector3 dragDirection = currentWorldPos - startWorldPos;
+
+            if (dragDirection.sqrMagnitude > 0.001f)
+            {
+                Vector2 gridPos = WorldToGrid(startWorldPos);
+                ApplyForceToArea(gridPos, dragDirection.normalized);
+                startWorldPos = currentWorldPos;
             }
         }
 
-        // Stop drag
-        if (inputDevice.GetButtonUp(VRButton.Trigger))
+        // Stop dragging
+        if (rightHandInput.GetButtonUp(VRButton.Trigger))
         {
             isDragging = false;
         }
-    }
-
-    private bool TryGetPointerWorldPosition(out Vector3 worldPos)
-    {
-        Ray ray = new Ray(handTransform.position, handTransform.forward);
-        Plane plane = new Plane(Vector3.forward, 0f); // Assuming Z = 0 plane
-
-        if (plane.Raycast(ray, out float distance))
-        {
-            worldPos = ray.GetPoint(distance);
-            return true;
-        }
-
-        worldPos = Vector3.zero;
-        return false;
     }
 
     private Vector2 WorldToGrid(Vector3 worldPos)

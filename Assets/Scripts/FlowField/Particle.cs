@@ -10,6 +10,7 @@ public class Particle
     private float maxSpeed;
     private ParticleSystem.Particle particle;
     private Color colour;
+    private FlowFieldManager flowFieldManager;
 
     // Element zone-related variables
     private bool isStuck = false;
@@ -30,6 +31,7 @@ public class Particle
         velocity = Vector2.zero;
         acceleration = Vector2.zero;
         colour = flowFieldManager.colourOptions[Random.Range(0, flowFieldManager.colourOptions.Length)];
+        this.flowFieldManager = flowFieldManager;
         originalColor = colour;
 
         particle = new ParticleSystem.Particle
@@ -37,6 +39,7 @@ public class Particle
             startSize = 0.1f,
             startColor = colour,
             position = Position
+            
         };
 
         randomSeed = Random.Range(0f, 1000f);
@@ -61,7 +64,8 @@ public class Particle
 
     public void Edges(float width, float height)
     {
-        if (Position.x > width || Position.x < 0 || Position.y > height || Position.y < 0)
+        if (Position.x > width + flowFieldManager.transform.position.x || Position.x < flowFieldManager.transform.position.x ||
+            Position.y > height + flowFieldManager.transform.position.y || Position.y < flowFieldManager.transform.position.y)
             Position = new Vector2(Random.Range(0, width), Random.Range(0, height));
     }
 
@@ -112,6 +116,7 @@ public class Particle
         Position += velocity;
         acceleration *= 0;
         particle.position = Position;
+        particle.position = new Vector3(Position.x, Position.y, flowFieldManager.transform.position.z);
     }
 
     private void UpdateElementZoneEffect()

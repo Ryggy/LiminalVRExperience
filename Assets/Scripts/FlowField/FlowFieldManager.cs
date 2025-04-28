@@ -25,7 +25,7 @@ public class FlowFieldManager : MonoBehaviour
         for (int i = 0; i < numParticles; i++)
         {
             Vector3 startPos = new Vector3(Random.Range(0, fieldWidth), Random.Range(0, fieldHeight), 0) + transform.position;
-            particles.Add(new Particle(this, startPos, 0.001f));
+            particles.Add(new Particle(this, startPos, 0.005f));
         }
     }
 

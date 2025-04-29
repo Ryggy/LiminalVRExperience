@@ -2875,7 +2875,7 @@ GameObject:
   - component: {fileID: 495676700}
   m_Layer: 0
   m_Name: Main Camera
-  m_TagString: MainCamera
+  m_TagString: NonVRCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4166,6 +4166,9 @@ MonoBehaviour:
   flowField: {fileID: 1949151990}
   influenceRadius: 3
   debugText: {fileID: 1306180889}
+  mainCamera: {fileID: 0}
+  NonVRCamera: 0
+  useMouseInput: 0
 --- !u!1 &906851934
 GameObject:
   m_ObjectHideFlags: 0

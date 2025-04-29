@@ -2,106 +2,87 @@
 using Liminal.SDK.VR;
 using Liminal.SDK.VR.Input;
 using TMPro;
+using UnityEngine.EventSystems; // Only if you are using debug text!
+
+[RequireComponent(typeof(FlowFieldTest))]
 public class FlowFieldInputVR : MonoBehaviour
 {
+    [Header("Flow Field Settings")]
     public FlowFieldTest flowField;
     public int influenceRadius = 1;
+    public float smoothFactor = 10f; // For drag smoothing
 
-    private Vector3 startWorldPos;
-    private bool isDragging = false;
+    [Header("Debugging")]
+    public TextMeshProUGUI debugText; // Optional: assign a UI Text element
+    public bool showDebug = true;
 
-    private IVRInputDevice rightHandInput;
-    
-    public TextMeshProUGUI debugText; 
+    private Vector3 _startWorldPos;
+    private bool _isDragging = false;
+    private Vector2 _previousDragDirection = Vector2.zero;
+
+    private IVRInputDevice RightHandInput => VRDevice.Device?.PrimaryInputDevice;
 
     private void Start()
     {
-        rightHandInput = VRDevice.Device?.PrimaryInputDevice;
+        if (flowField == null)
+            flowField = GetComponent<FlowFieldTest>();
     }
-    void Update()
+
+    private void Update()
     {
-        if (rightHandInput == null || rightHandInput.Pointer == null)
+        if (RightHandInput == null || RightHandInput.Pointer == null)
             return;
 
-        var raycastResult = rightHandInput.Pointer.CurrentRaycastResult;
-        string message = "";
+        var raycastResult = RightHandInput.Pointer.CurrentRaycastResult;
 
-        if (raycastResult.isValid)
+        // Always update debug text if enabled
+        if (showDebug)
+            UpdateDebugInfo(raycastResult);
+
+        // Handle input
+        if (RightHandInput.GetButtonDown(VRButton.Trigger) && raycastResult.isValid)
         {
-            Vector3 hitPos = raycastResult.worldPosition;
-            message += $"Pointer Hit: {hitPos:F2}\n";
-
-            // Convert to grid position
-            int gridX = Mathf.FloorToInt(hitPos.x / flowField.scale);
-            int gridY = Mathf.FloorToInt(hitPos.y / flowField.scale);
-
-            // Check bounds
-            if (gridX >= 0 && gridX < flowField.cols && gridY >= 0 && gridY < flowField.rows)
-            {
-                message += $"Grid Position: ({gridX}, {gridY})\n";
-            }
-            else
-            {
-                message += "Grid Position: Out of bounds\n";
-            }
+            _startWorldPos = raycastResult.worldPosition;
+            _isDragging = true;
+            _previousDragDirection = Vector2.zero;
         }
 
-        if (rightHandInput.GetButtonDown(VRButton.Trigger))
-        {
-            message += "Trigger Down\n";
-
-        }
-
-        if (rightHandInput.GetButton(VRButton.Trigger))
-        {
-            message += "Dragging\n";
-        }
-        
-        if (rightHandInput.GetButtonUp(VRButton.Trigger))
-        {
-            message += "Trigger Up\n";
-        }
-
-        if (debugText != null)
-        {
-            debugText.text = message;
-        }
-        
-        // Start dragging
-        if (rightHandInput.GetButtonDown(VRButton.Trigger) && raycastResult.isValid)
-        {
-            startWorldPos = raycastResult.worldPosition;
-            isDragging = true;
-        }
-
-        // While dragging
-        if (isDragging && raycastResult.isValid)
+        if (_isDragging && raycastResult.isValid)
         {
             Vector3 currentWorldPos = raycastResult.worldPosition;
-            Vector3 dragDirection = currentWorldPos - startWorldPos;
+            Vector2 gridPos;
 
-            if (dragDirection.sqrMagnitude > 0.001f)
+            if (TryWorldToGrid(_startWorldPos, out gridPos))
             {
-                Vector2 gridPos = WorldToGrid(startWorldPos);
-                ApplyForceToArea(gridPos, dragDirection.normalized);
-                startWorldPos = currentWorldPos;
+                Vector3 dragDirection = currentWorldPos - _startWorldPos;
+
+                if (dragDirection.sqrMagnitude > 0.001f)
+                {
+                    Vector2 smoothedDirection = Vector2.Lerp(_previousDragDirection, dragDirection.normalized, Time.deltaTime * smoothFactor);
+                    ApplyForceToArea(gridPos, smoothedDirection);
+                    _previousDragDirection = smoothedDirection;
+                    _startWorldPos = currentWorldPos;
+                }
             }
         }
 
-        // Stop dragging
-        if (rightHandInput.GetButtonUp(VRButton.Trigger))
+        if (RightHandInput.GetButtonUp(VRButton.Trigger))
         {
-            isDragging = false;
+            _isDragging = false;
         }
     }
 
-    private Vector2 WorldToGrid(Vector3 worldPos)
+    private bool TryWorldToGrid(Vector3 worldPos, out Vector2 gridPos)
     {
-        int x = Mathf.FloorToInt(worldPos.x / flowField.scale);
-        int y = Mathf.FloorToInt(worldPos.y / flowField.scale);
-        x = Mathf.Clamp(x, 0, flowField.cols - 1);
-        y = Mathf.Clamp(y, 0, flowField.rows - 1);
-        return new Vector2(x, y);
+        Vector2 localPos = worldPos - (Vector3)flowField.transform.position;
+
+        int x = Mathf.FloorToInt(localPos.x / flowField.scale);
+        int y = Mathf.FloorToInt(localPos.y / flowField.scale);
+
+        bool valid = x >= 0 && x < flowField.cols && y >= 0 && y < flowField.rows;
+
+        gridPos = new Vector2(Mathf.Clamp(x, 0, flowField.cols - 1), Mathf.Clamp(y, 0, flowField.rows - 1));
+        return valid;
     }
 
     private void ApplyForceToArea(Vector2 centerGridPos, Vector2 direction)
@@ -124,6 +105,27 @@ public class FlowFieldInputVR : MonoBehaviour
                     flowField.SetForce(new Vector2(targetX, targetY), direction);
                 }
             }
+        }
+    }
+
+    private void UpdateDebugInfo(RaycastResult raycastResult)
+    {
+        if (debugText == null) return;
+
+        if (raycastResult.isValid)
+        {
+            Vector3 hitPos = raycastResult.worldPosition;
+            Vector2 gridPos;
+            bool validGrid = TryWorldToGrid(hitPos, out gridPos);
+
+            debugText.text =
+                $"Pointer Hit: {hitPos:F2}\n" +
+                (validGrid ? $"Grid Pos: ({(int)gridPos.x}, {(int)gridPos.y})\n" : "Grid Pos: Out of bounds\n") +
+                (_isDragging ? "Dragging\n" : (RightHandInput.GetButton(VRButton.Trigger) ? "Holding\n" : "Idle\n"));
+        }
+        else
+        {
+            debugText.text = "No valid pointer hit.";
         }
     }
 }

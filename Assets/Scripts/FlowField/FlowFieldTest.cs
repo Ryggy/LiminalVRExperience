@@ -122,11 +122,5 @@ public class FlowFieldTest : MonoBehaviour
     {
         vectors[(int)position.x, (int)position.y] = force;
     }
-    
-    void Update()
-    {
-        // Optional: uncomment to regenerate every frame
-        // GenerateField();
-    }
-   
+
 }

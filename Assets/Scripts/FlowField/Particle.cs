@@ -22,8 +22,12 @@ public class Particle
     private const float elementZoneLifespan = 3f;
     private bool shrinking = false;
     private static HashSet<Vector2> takenElementZonePositions = new HashSet<Vector2>();
-    // variables
-
+    
+    private Vector2 lastPosition;
+    private float noMovementTimer = 0f;
+    private const float maxNoMovementTime = 2f; // seconds before respawn
+    private const float minimumMovementDistance = 0.01f; // how far must it move over time
+    
     public Particle(FlowFieldManager flowFieldManager, Vector2 start, float maxSpeed)
     {
         this.maxSpeed = maxSpeed;
@@ -113,12 +117,49 @@ public class Particle
     {
         velocity += acceleration;
         velocity = Vector2.ClampMagnitude(velocity, maxSpeed);
+        
         Position += velocity;
         acceleration *= 0;
-        particle.position = Position;
+        
+        // Movement detection based on position delta
+        float movedDistanceSq = (Position - lastPosition).sqrMagnitude;
+        if (movedDistanceSq < minimumMovementDistance * minimumMovementDistance)
+        {
+            noMovementTimer += Time.deltaTime;
+            if (noMovementTimer >= maxNoMovementTime)
+            {
+                Respawn();
+                return;
+            }
+        }
+        else
+        {
+            noMovementTimer = 0f;
+            lastPosition = Position;
+        }
+        
         particle.position = new Vector3(Position.x, Position.y, flowFieldManager.transform.position.z);
     }
 
+    private void Respawn()
+    {
+        isStuck = false;
+        shrinking = false;
+        particle.startSize = 0.1f;
+        particle.startColor = originalColor;
+
+        // Respawn somewhere random inside the flow field area
+        float width = flowFieldManager.fieldWidth;
+        float height = flowFieldManager.fieldHeight;
+        Position = new Vector2(
+            Random.Range(0, width) + flowFieldManager.transform.position.x,
+            Random.Range(0, height) + flowFieldManager.transform.position.y
+        );
+
+        velocity = Vector2.zero;
+        acceleration = Vector2.zero;
+    }
+    
     private void UpdateElementZoneEffect()
     {
         elementZoneAge += Time.deltaTime;

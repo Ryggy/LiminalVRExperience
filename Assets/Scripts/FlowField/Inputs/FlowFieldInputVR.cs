@@ -2,6 +2,7 @@
 using Liminal.SDK.VR;
 using Liminal.SDK.VR.Input;
 using TMPro;
+using UnityEngine.Serialization;
 using UnityEngine.XR;
 
 public class FlowFieldInputVR : MonoBehaviour
@@ -16,7 +17,13 @@ public class FlowFieldInputVR : MonoBehaviour
     public TextMeshProUGUI debugText; 
 
     public Camera mainCamera;
-    private bool useMouseInput = false;
+    
+    [Header("Camera Control Settings")]
+    [Tooltip("Enable this toggle to find and activate the NonVRCamera. " +
+             "Ensure this is turned ON before enabling mouse input for proper functionality.")]
+    [FormerlySerializedAs("shouldFindCamera")] public bool NonVRCamera = false;  //  NEW: Manual toggle
+    public bool useMouseInput = false;
+
     
  
 
@@ -26,67 +33,88 @@ public class FlowFieldInputVR : MonoBehaviour
         rightHandInput = VRDevice.Device?.PrimaryInputDevice;
     }
 
-    void Update()
+  void Update()
+{
+    // Ensure the flowField exists before proceeding
+    if (flowField == null) return;
+
+    string message = "";
+
+    // Check if the camera toggle should be triggered
+    if (NonVRCamera)
     {
-        if (flowField == null)
-            return;
-
-        string message = "";
-
-        bool xrActive = XRSettings.isDeviceActive;
-        bool vrPointerValid = rightHandInput?.Pointer != null;
-
-        // Check if there is mouse input detected
-        bool mouseInputDetected = Input.GetMouseButton(0) || Input.GetMouseButton(1) || Input.GetMouseButton(2) || Input.mousePosition != Vector3.zero;
-
-        // If VR is active and no mouse input detected, continue with VR
-        if (xrActive && vrPointerValid && !mouseInputDetected)
+        // If the camera is not already found, find it
+        if (mainCamera == null)
         {
-            // VR is active, disable the regular camera for VR
-            if (mainCamera != null && mainCamera.gameObject.activeSelf)
-            {
-                mainCamera.gameObject.SetActive(false);  // Disable camera for VR
-            }
-
-            HandleVRInput(ref message);
-        }
-        else
-        {
-            // Mouse input detected, initialize the camera if it's not already done
-            if (mainCamera == null && mouseInputDetected)
-            {
-                // Find the camera with the NonVRCamera tag if it hasn't been set yet
-                Camera[] allCameras = Resources.FindObjectsOfTypeAll<Camera>();
-                foreach (Camera cam in allCameras)
-                {
-                    // Check if the camera has the NonVRCamera tag
-                    if (cam.CompareTag("NonVRCamera"))
-                    {
-                        mainCamera = cam;
-                        break;
-                    }
-                }
-
-                // Enable the main camera for mouse input once it's found
-                if (mainCamera != null)
-                {
-                    mainCamera.gameObject.SetActive(true);
-                }
-            }
-
-            // Handle mouse input if camera is found
-            if (mainCamera != null)
-            {
-                useMouseInput = true;
-                HandleMouseInput(ref message);
-            }
+            FindNonVRCamera();
         }
 
-        if (debugText != null)
+        // If the camera is found, activate it
+        if (mainCamera != null && !mainCamera.gameObject.activeSelf)
         {
-            debugText.text = message;
+            mainCamera.gameObject.SetActive(true);
+            Debug.Log("NonVRCamera activated.");
         }
     }
+    else
+    {
+        // If shouldFindCamera is false, deactivate the NonVRCamera
+        if (mainCamera != null && mainCamera.gameObject.activeSelf)
+        {
+            mainCamera.gameObject.SetActive(false);
+            Debug.Log("NonVRCamera deactivated.");
+        }
+    }
+
+    // If input is active, either handle mouse input or VR input
+    if (useMouseInput && mainCamera != null)
+    {
+        HandleMouseInput(ref message);  // Use the camera for mouse input
+    }
+    else if (XRSettings.isDeviceActive && rightHandInput?.Pointer != null)
+    {
+        if (mainCamera != null && mainCamera.gameObject.activeSelf)
+        {
+            mainCamera.gameObject.SetActive(false);  // Deactivate the camera for VR mode
+            Debug.Log("NonVRCamera deactivated.");
+        }
+
+        HandleVRInput(ref message);  // Use VR input
+    }
+
+    // Update debug message
+    if (debugText != null)
+    {
+        debugText.text = message;
+    }
+}
+
+private void FindNonVRCamera()
+{
+    if (mainCamera != null) return;  // If the camera is already found, do nothing
+
+    Camera[] allCameras = Resources.FindObjectsOfTypeAll<Camera>();
+    foreach (Camera cam in allCameras)
+    {
+        if (cam.CompareTag("NonVRCamera"))
+        {
+            mainCamera = cam;
+            break;
+        }
+    }
+
+    // Activate the camera if found
+    if (mainCamera != null)
+    {
+        mainCamera.gameObject.SetActive(true);
+        Debug.Log("Found and activated NonVRCamera.");
+    }
+    else
+    {
+        Debug.LogWarning("No NonVRCamera found.");
+    }
+}
+
     private void HandleMouseInput(ref string message)
     {
         if (mainCamera == null)
@@ -223,6 +251,34 @@ public class FlowFieldInputVR : MonoBehaviour
                 {
                     flowField.SetForce(new Vector2(targetX, targetY), direction);
                 }
+            }
+        }
+    }
+    
+    
+    void OnDrawGizmos()
+    {
+        if (flowField == null)
+            return;
+
+        // Set gizmo color
+        Gizmos.color = Color.yellow;
+
+        // Draw a wireframe box representing the flow field area
+        Vector3 center = new Vector3(flowField.cols * flowField.scale / 2f, flowField.rows * flowField.scale / 2f, 0f);
+        center += flowField.transform.position; // Offset by the flowField object's position
+        Vector3 size = new Vector3(flowField.cols * flowField.scale, flowField.rows * flowField.scale, 0.1f);
+
+        Gizmos.DrawWireCube(center, size);
+
+        // Optional: Draw the current hit point if available
+        if (Application.isPlaying && useMouseInput && mainCamera != null)
+        {
+            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out RaycastHit hit))
+            {
+                Gizmos.color = Color.red;
+                Gizmos.DrawSphere(hit.point, .2f);  // Draw a small sphere where the mouse is hitting
             }
         }
     }

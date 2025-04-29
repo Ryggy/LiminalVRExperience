@@ -2,6 +2,8 @@
 using Liminal.SDK.VR;
 using Liminal.SDK.VR.Input;
 using TMPro;
+using UnityEngine.XR;
+
 public class FlowFieldInputVR : MonoBehaviour
 {
     public FlowFieldTest flowField;
@@ -16,37 +18,12 @@ public class FlowFieldInputVR : MonoBehaviour
     public Camera mainCamera;
     private bool useMouseInput = false;
     
+ 
+
+    
     private void Start()
     {
         rightHandInput = VRDevice.Device?.PrimaryInputDevice;
-    
-        // Try to find the main camera, even if it's disabled
-        if (mainCamera == null)
-        {
-            // This finds both active and inactive cameras
-            Camera[] allCameras = Resources.FindObjectsOfTypeAll<Camera>();
-            foreach (Camera cam in allCameras)
-            {
-                if (cam.CompareTag("MainCamera"))
-                {
-                    mainCamera = cam;
-                    break;
-                }
-            }
-        }
-        // Detect if VR device is unavailable
-        if (rightHandInput == null || rightHandInput.Pointer == null)
-        {
-            useMouseInput = true;
-
-            if (mainCamera != null)
-                mainCamera.gameObject.SetActive(true); // <<< Turn ON the camera GameObject itself
-        }
-        else
-        {
-            if (mainCamera != null)
-                mainCamera.gameObject.SetActive(false); // <<< Optionally turn it OFF when VR detected
-        }
     }
 
     void Update()
@@ -56,13 +33,53 @@ public class FlowFieldInputVR : MonoBehaviour
 
         string message = "";
 
-        if (useMouseInput)
+        bool xrActive = XRSettings.isDeviceActive;
+        bool vrPointerValid = rightHandInput?.Pointer != null;
+
+        // Check if there is mouse input detected
+        bool mouseInputDetected = Input.GetMouseButton(0) || Input.GetMouseButton(1) || Input.GetMouseButton(2) || Input.mousePosition != Vector3.zero;
+
+        // If VR is active and no mouse input detected, continue with VR
+        if (xrActive && vrPointerValid && !mouseInputDetected)
         {
-            HandleMouseInput(ref message);
+            // VR is active, disable the regular camera for VR
+            if (mainCamera != null && mainCamera.gameObject.activeSelf)
+            {
+                mainCamera.gameObject.SetActive(false);  // Disable camera for VR
+            }
+
+            HandleVRInput(ref message);
         }
         else
         {
-            HandleVRInput(ref message);
+            // Mouse input detected, initialize the camera if it's not already done
+            if (mainCamera == null && mouseInputDetected)
+            {
+                // Find the camera with the NonVRCamera tag if it hasn't been set yet
+                Camera[] allCameras = Resources.FindObjectsOfTypeAll<Camera>();
+                foreach (Camera cam in allCameras)
+                {
+                    // Check if the camera has the NonVRCamera tag
+                    if (cam.CompareTag("NonVRCamera"))
+                    {
+                        mainCamera = cam;
+                        break;
+                    }
+                }
+
+                // Enable the main camera for mouse input once it's found
+                if (mainCamera != null)
+                {
+                    mainCamera.gameObject.SetActive(true);
+                }
+            }
+
+            // Handle mouse input if camera is found
+            if (mainCamera != null)
+            {
+                useMouseInput = true;
+                HandleMouseInput(ref message);
+            }
         }
 
         if (debugText != null)
@@ -70,7 +87,6 @@ public class FlowFieldInputVR : MonoBehaviour
             debugText.text = message;
         }
     }
-
     private void HandleMouseInput(ref string message)
     {
         if (mainCamera == null)

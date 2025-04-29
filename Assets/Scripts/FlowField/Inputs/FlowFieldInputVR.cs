@@ -89,31 +89,29 @@ public class FlowFieldInputVR : MonoBehaviour
     }
 }
 
-private void FindNonVRCamera()
-{
-    if (mainCamera != null) return;  // If the camera is already found, do nothing
+  private void FindNonVRCamera()
+  {
+      if (mainCamera != null) return;
 
-    Camera[] allCameras = Resources.FindObjectsOfTypeAll<Camera>();
-    foreach (Camera cam in allCameras)
-    {
-        if (cam.CompareTag("NonVRCamera"))
-        {
-            mainCamera = cam;
-            break;
-        }
-    }
-
-    // Activate the camera if found
-    if (mainCamera != null)
-    {
-        mainCamera.gameObject.SetActive(true);
-        Debug.Log("Found and activated NonVRCamera.");
-    }
-    else
-    {
-        Debug.LogWarning("No NonVRCamera found.");
-    }
-}
+      GameObject camHolder = GameObject.FindWithTag("NonVRCamera");
+      if (camHolder != null)
+      {
+          mainCamera = camHolder.GetComponentInChildren<Camera>(true); // true = include inactive
+          if (mainCamera != null)
+          {
+              camHolder.SetActive(true); // activate the whole object (camera and its holder)
+              Debug.Log("Found and activated NonVRCamera.");
+          }
+          else
+          {
+              Debug.LogWarning("Tagged object found but no Camera component under it.");
+          }
+      }
+      else
+      {
+          Debug.LogWarning("No GameObject tagged 'NonVRCamera' found.");
+      }
+  }
 
     private void HandleMouseInput(ref string message)
     {

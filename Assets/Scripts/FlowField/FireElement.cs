@@ -30,12 +30,14 @@ public class FireElement : IElement
     public void DrawGizmos(Vector2[,] vectors, int cols, int rows, float scale, FlowFieldTest owner)
     {
         Gizmos.color = owner.GetFlickeringColor();
+        Vector3 offset = owner.transform.position;
+
         for (int y = 0; y < rows; y++)
         for (int x = 0; x < cols; x++)
             if (owner.IsInFireMask(x, y))
             {
-                Vector2 pos = new Vector2(x * scale, y * scale);
-                Gizmos.DrawLine(pos, pos + vectors[x, y] * scale * 0.5f);
+                Vector3 pos = new Vector3(x * scale, y * scale, 0) + offset;
+                Gizmos.DrawLine(pos, pos + (Vector3)vectors[x, y] * scale * 0.5f);
             }
     }
 }

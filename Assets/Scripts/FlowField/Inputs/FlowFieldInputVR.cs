@@ -5,37 +5,89 @@ using TMPro;
 public class FlowFieldInputVR : MonoBehaviour
 {
     public FlowFieldTest flowField;
-    public int influenceRadius = 1;
+    public int influenceRadius = 5;
 
     private Vector3 startWorldPos;
     private bool isDragging = false;
 
     private IVRInputDevice rightHandInput;
-    
     public TextMeshProUGUI debugText; 
 
+    public Camera mainCamera;
+    private bool useMouseInput = false;
+    
     private void Start()
     {
         rightHandInput = VRDevice.Device?.PrimaryInputDevice;
+    
+        // Try to find the main camera, even if it's disabled
+        if (mainCamera == null)
+        {
+            // This finds both active and inactive cameras
+            Camera[] allCameras = Resources.FindObjectsOfTypeAll<Camera>();
+            foreach (Camera cam in allCameras)
+            {
+                if (cam.CompareTag("MainCamera"))
+                {
+                    mainCamera = cam;
+                    break;
+                }
+            }
+        }
+        // Detect if VR device is unavailable
+        if (rightHandInput == null || rightHandInput.Pointer == null)
+        {
+            useMouseInput = true;
+
+            if (mainCamera != null)
+                mainCamera.gameObject.SetActive(true); // <<< Turn ON the camera GameObject itself
+        }
+        else
+        {
+            if (mainCamera != null)
+                mainCamera.gameObject.SetActive(false); // <<< Optionally turn it OFF when VR detected
+        }
     }
+
     void Update()
     {
-        if (rightHandInput == null || rightHandInput.Pointer == null)
+        if (flowField == null)
             return;
 
-        var raycastResult = rightHandInput.Pointer.CurrentRaycastResult;
         string message = "";
 
-        if (raycastResult.isValid)
+        if (useMouseInput)
         {
-            Vector3 hitPos = raycastResult.worldPosition;
-            message += $"Pointer Hit: {hitPos:F2}\n";
+            HandleMouseInput(ref message);
+        }
+        else
+        {
+            HandleVRInput(ref message);
+        }
 
-            // Convert to grid position
+        if (debugText != null)
+        {
+            debugText.text = message;
+        }
+    }
+
+    private void HandleMouseInput(ref string message)
+    {
+        if (mainCamera == null)
+            return;
+
+        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        bool hitSomething = Physics.Raycast(ray, out hit);
+        if (hitSomething)
+        {
+            Vector3 hitPos = hit.point;
+            message += $"Mouse Hit: {hitPos:F2}\n";
+
             int gridX = Mathf.FloorToInt(hitPos.x / flowField.scale);
             int gridY = Mathf.FloorToInt(hitPos.y / flowField.scale);
 
-            // Check bounds
             if (gridX >= 0 && gridX < flowField.cols && gridY >= 0 && gridY < flowField.rows)
             {
                 message += $"Grid Position: ({gridX}, {gridY})\n";
@@ -44,54 +96,86 @@ public class FlowFieldInputVR : MonoBehaviour
             {
                 message += "Grid Position: Out of bounds\n";
             }
-        }
 
-        if (rightHandInput.GetButtonDown(VRButton.Trigger))
-        {
-            message += "Trigger Down\n";
-
-        }
-
-        if (rightHandInput.GetButton(VRButton.Trigger))
-        {
-            message += "Dragging\n";
-        }
-        
-        if (rightHandInput.GetButtonUp(VRButton.Trigger))
-        {
-            message += "Trigger Up\n";
-        }
-
-        if (debugText != null)
-        {
-            debugText.text = message;
-        }
-        
-        // Start dragging
-        if (rightHandInput.GetButtonDown(VRButton.Trigger) && raycastResult.isValid)
-        {
-            startWorldPos = raycastResult.worldPosition;
-            isDragging = true;
-        }
-
-        // While dragging
-        if (isDragging && raycastResult.isValid)
-        {
-            Vector3 currentWorldPos = raycastResult.worldPosition;
-            Vector3 dragDirection = currentWorldPos - startWorldPos;
-
-            if (dragDirection.sqrMagnitude > 0.001f)
+            if (Input.GetMouseButtonDown(0))
             {
-                Vector2 gridPos = WorldToGrid(startWorldPos);
-                ApplyForceToArea(gridPos, dragDirection.normalized);
-                startWorldPos = currentWorldPos;
+                startWorldPos = hitPos;
+                isDragging = true;
+                message += "Mouse Down\n";
+            }
+
+            if (isDragging)
+            {
+                Vector3 currentWorldPos = hitPos;
+                Vector3 dragDirection = currentWorldPos - startWorldPos;
+
+                if (dragDirection.sqrMagnitude > 0.001f)
+                {
+                    Vector2 gridPos = WorldToGrid(startWorldPos);
+                    ApplyForceToArea(gridPos, dragDirection.normalized);
+                    startWorldPos = currentWorldPos;
+                    message += "Dragging\n";
+                }
+            }
+
+            if (Input.GetMouseButtonUp(0))
+            {
+                isDragging = false;
+                message += "Mouse Up\n";
             }
         }
+    }
 
-        // Stop dragging
-        if (rightHandInput.GetButtonUp(VRButton.Trigger))
+    private void HandleVRInput(ref string message)
+    {
+        if (rightHandInput == null || rightHandInput.Pointer == null)
+            return;
+
+        var raycastResult = rightHandInput.Pointer.CurrentRaycastResult;
+
+        if (raycastResult.isValid)
         {
-            isDragging = false;
+            Vector3 hitPos = raycastResult.worldPosition;
+            message += $"Pointer Hit: {hitPos:F2}\n";
+
+            int gridX = Mathf.FloorToInt(hitPos.x / flowField.scale);
+            int gridY = Mathf.FloorToInt(hitPos.y / flowField.scale);
+
+            if (gridX >= 0 && gridX < flowField.cols && gridY >= 0 && gridY < flowField.rows)
+            {
+                message += $"Grid Position: ({gridX}, {gridY})\n";
+            }
+            else
+            {
+                message += "Grid Position: Out of bounds\n";
+            }
+
+            if (rightHandInput.GetButtonDown(VRButton.Trigger))
+            {
+                startWorldPos = hitPos;
+                isDragging = true;
+                message += "Trigger Down\n";
+            }
+
+            if (isDragging)
+            {
+                Vector3 currentWorldPos = hitPos;
+                Vector3 dragDirection = currentWorldPos - startWorldPos;
+
+                if (dragDirection.sqrMagnitude > 0.001f)
+                {
+                    Vector2 gridPos = WorldToGrid(startWorldPos);
+                    ApplyForceToArea(gridPos, dragDirection.normalized);
+                    startWorldPos = currentWorldPos;
+                    message += "Dragging\n";
+                }
+            }
+
+            if (rightHandInput.GetButtonUp(VRButton.Trigger))
+            {
+                isDragging = false;
+                message += "Trigger Up\n";
+            }
         }
     }
 

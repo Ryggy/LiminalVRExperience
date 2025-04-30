@@ -23,10 +23,6 @@ public class FlowFieldInputVR : MonoBehaviour
              "Ensure this is turned ON before enabling mouse input for proper functionality.")]
     [FormerlySerializedAs("shouldFindCamera")] public bool NonVRCamera = false;  //  NEW: Manual toggle
     public bool useMouseInput = false;
-
-    
- 
-
     
     private void Start()
     {
@@ -34,60 +30,60 @@ public class FlowFieldInputVR : MonoBehaviour
     }
 
   void Update()
-{
-    // Ensure the flowField exists before proceeding
-    if (flowField == null) return;
-
-    string message = "";
-
-    // Check if the camera toggle should be triggered
-    if (NonVRCamera)
     {
-        // If the camera is not already found, find it
-        if (mainCamera == null)
+        // Ensure the flowField exists before proceeding
+        if (flowField == null) return;
+
+        string message = "";
+
+        // Check if the camera toggle should be triggered
+        if (NonVRCamera)
         {
-            FindNonVRCamera();
+            // If the camera is not already found, find it
+            if (mainCamera == null)
+            {
+                FindNonVRCamera();
+            }
+
+            // If the camera is found, activate it
+            if (mainCamera != null && !mainCamera.gameObject.activeSelf)
+            {
+                mainCamera.gameObject.SetActive(true);
+                Debug.Log("NonVRCamera activated.");
+            }
+        }
+        else
+        {
+            // If shouldFindCamera is false, deactivate the NonVRCamera
+            if (mainCamera != null && mainCamera.gameObject.activeSelf)
+            {
+                mainCamera.gameObject.SetActive(false);
+                Debug.Log("NonVRCamera deactivated.");
+            }
         }
 
-        // If the camera is found, activate it
-        if (mainCamera != null && !mainCamera.gameObject.activeSelf)
+        // If input is active, either handle mouse input or VR input
+        if (useMouseInput && mainCamera != null)
         {
-            mainCamera.gameObject.SetActive(true);
-            Debug.Log("NonVRCamera activated.");
+            HandleMouseInput(ref message);  // Use the camera for mouse input
         }
-    }
-    else
-    {
-        // If shouldFindCamera is false, deactivate the NonVRCamera
-        if (mainCamera != null && mainCamera.gameObject.activeSelf)
+        else if (XRSettings.isDeviceActive && rightHandInput?.Pointer != null)
         {
-            mainCamera.gameObject.SetActive(false);
-            Debug.Log("NonVRCamera deactivated.");
-        }
-    }
+            if (mainCamera != null && mainCamera.gameObject.activeSelf)
+            {
+                mainCamera.gameObject.SetActive(false);  // Deactivate the camera for VR mode
+                Debug.Log("NonVRCamera deactivated.");
+            }
 
-    // If input is active, either handle mouse input or VR input
-    if (useMouseInput && mainCamera != null)
-    {
-        HandleMouseInput(ref message);  // Use the camera for mouse input
-    }
-    else if (XRSettings.isDeviceActive && rightHandInput?.Pointer != null)
-    {
-        if (mainCamera != null && mainCamera.gameObject.activeSelf)
-        {
-            mainCamera.gameObject.SetActive(false);  // Deactivate the camera for VR mode
-            Debug.Log("NonVRCamera deactivated.");
+            HandleVRInput(ref message);  // Use VR input
         }
 
-        HandleVRInput(ref message);  // Use VR input
+        // Update debug message
+        if (debugText != null)
+        {
+            debugText.text = message;
+        }
     }
-
-    // Update debug message
-    if (debugText != null)
-    {
-        debugText.text = message;
-    }
-}
 
   private void FindNonVRCamera()
   {
@@ -223,8 +219,9 @@ public class FlowFieldInputVR : MonoBehaviour
 
     private Vector2 WorldToGrid(Vector3 worldPos)
     {
-        int x = Mathf.FloorToInt(worldPos.x / flowField.scale);
-        int y = Mathf.FloorToInt(worldPos.y / flowField.scale);
+        Vector3 localPos = worldPos - flowField.transform.position;
+        int x = Mathf.FloorToInt(localPos.x / flowField.scale);
+        int y = Mathf.FloorToInt(localPos.y / flowField.scale);
         x = Mathf.Clamp(x, 0, flowField.cols - 1);
         y = Mathf.Clamp(y, 0, flowField.rows - 1);
         return new Vector2(x, y);

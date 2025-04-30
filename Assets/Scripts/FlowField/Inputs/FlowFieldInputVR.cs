@@ -4,7 +4,6 @@ using Liminal.SDK.VR.Input;
 using TMPro;
 using UnityEngine.EventSystems; // Only if you are using debug text!
 
-[RequireComponent(typeof(FlowFieldTest))]
 public class FlowFieldInputVR : MonoBehaviour
 {
     [Header("Flow Field Settings")]

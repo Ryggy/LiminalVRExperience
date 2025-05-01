@@ -24,16 +24,19 @@ public class FlowFieldTest : MonoBehaviour
     public OutlineType outlineType = OutlineType.Fire;
     public enum OutlineType { Normal, Fire, Lightning }
 
-    private IElement behavior;
-    private Dictionary<OutlineType, IElement> behaviors;
+
+    
+    private ElementBase behavior;
+    private Dictionary<OutlineType, ElementBase> behaviors;
+    
 
     void Awake()
     {
-        behaviors = new Dictionary<OutlineType, IElement>()
+        behaviors = new Dictionary<OutlineType, ElementBase>()
         {
-            { OutlineType.Normal,    new NormalElement() },
+            { OutlineType.Normal,    new NormalElement(this) },
             { OutlineType.Fire,      new FireElement(this) },
-            // { OutlineType.Lightning, new LightningBehavior() }
+            // { OutlineType.Lightning, new LightningElement(this) }
         };
     }
 

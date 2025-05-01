@@ -30,7 +30,17 @@ public class FlowFieldEditor : Editor
         flowFieldTest.rows = EditorGUILayout.IntField("Rows", flowFieldTest.rows);
         flowFieldTest.scale = EditorGUILayout.FloatField("Scale", flowFieldTest.scale);
         flowFieldTest.increment = EditorGUILayout.FloatField("Increment", flowFieldTest.increment);
+        
+        
+        // Add a black line to separate sections
+        DrawSeparator();
 
+        // Outline Type Section
+        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("Outline Type", EditorStyles.boldLabel);
+        flowFieldTest.outlineType = (FlowFieldTest.OutlineType)EditorGUILayout.EnumPopup("Outline Type", flowFieldTest.outlineType);
+        
+        
         // Add a black line to separate sections
         DrawSeparator();
 
@@ -45,14 +55,7 @@ public class FlowFieldEditor : Editor
         flowFieldTest.startColor = EditorGUILayout.ColorField("Fire Start Color", flowFieldTest.startColor);
         flowFieldTest.middleColor = EditorGUILayout.ColorField("Fire Middle Color", flowFieldTest.middleColor);
         flowFieldTest.endColor = EditorGUILayout.ColorField("Fire End Color", flowFieldTest.endColor);
-
-        // Add a black line to separate sections
-        DrawSeparator();
-
-        // Outline Type Section
-        EditorGUILayout.Space();
-        EditorGUILayout.LabelField("Outline Type", EditorStyles.boldLabel);
-        flowFieldTest.outlineType = (FlowFieldTest.OutlineType)EditorGUILayout.EnumPopup("Outline Type", flowFieldTest.outlineType);
+        
 
         // Add a black line to separate sections
         DrawSeparator();
@@ -68,6 +71,16 @@ public class FlowFieldEditor : Editor
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Water Field Settings", EditorStyles.boldLabel);
         // Water-specific settings can be added here in the future
+        EditorGUILayout.Slider(serializedObject.FindProperty("waveAmplitude"), 0f, 10f, new GUIContent("Wave Amplitude"));
+        EditorGUILayout.Slider(serializedObject.FindProperty("waveFrequency"), 0f, 2f, new GUIContent("Wave Frequency"));
+        EditorGUILayout.Slider(serializedObject.FindProperty("waveSpeed"), 0f, 10f, new GUIContent("Wave Speed"));
+        EditorGUILayout.Slider(serializedObject.FindProperty("waterLevel"), 0f, 40f, new GUIContent("Water Level"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("waterStartColor"), new GUIContent("Start Color"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("waterEndColor"), new GUIContent("End Color"));
+        
+        
+        
+        
 
         // Add a black line to separate sections
         DrawSeparator();

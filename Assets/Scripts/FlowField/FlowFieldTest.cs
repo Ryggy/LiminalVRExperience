@@ -2,99 +2,139 @@
 using UnityEngine;
 using Valve.VR.Extras;
 
+/*
+ * Summary:
+ * The FlowFieldTest script generates and visualizes a dynamic flow field in Unity. It stores a grid of directional vectors and supports multiple behaviors based on the selected outline type (e.g., Fire, Normal).
+ * It can display effects like fire flickering, and the flow field is rendered in the Scene view using Gizmos. The script also allows for manipulating the flow vectors at specific positions.
+ */
+
 public class FlowFieldTest : MonoBehaviour
 {
     // Grid settings (hidden from Inspector) uses editor to display
     [HideInInspector] public int cols = 60, rows = 40;
     [HideInInspector] public float scale = 10f;
     [HideInInspector] public float increment = 0.1f;
-    [HideInInspector] private float zOffset = 0f;  // Used for animation in the flow field
-    [HideInInspector] private Vector2[,] vectors;  // Stores flow field vectors
-
-    // Fire settings (hidden from Inspector) - uses editor to display
+    [HideInInspector] private float zOffset = 0f;
+    [HideInInspector] private Vector2[,] vectors;
     [HideInInspector] public bool showFlowField = true;
-    [HideInInspector] public float fireScale = 9f;
-    [HideInInspector] public float flickerSpeed = 0f;
-    [HideInInspector] public float flickerAmount = 0f;
-    [HideInInspector] public float fireBaseWidth = 0f;
-    [HideInInspector] public float fireTipWidth = -2f;
-    [HideInInspector] public Color startColor = Color.red;
-    [HideInInspector] public Color middleColor = new Color(1f, 0.647f, 0f); // Orange color
-    [HideInInspector] public Color endColor = Color.yellow;
     
     // Outline type setting (hidden from Inspector) uses editor to display
     [HideInInspector] public OutlineType outlineType = OutlineType.Fire;
 
-    public enum OutlineType { Normal, Fire, Water, Earth, Air }
+    public enum OutlineType
+    {
+        Normal,
+        Fire,
+        Water,
+        Earth,
+        Air
+    }
 
     // Reference to the behavior class (changes depending on outline type)
     private ElementBase behavior;
-    
+
     // Dictionary of available behaviors for different outline types
     private Dictionary<OutlineType, ElementBase> behaviors;
 
-    // Initialize behavior dictionary
+    // Initializes the behavior dictionary with available outline types.
     void Awake()
     {
         behaviors = new Dictionary<OutlineType, ElementBase>()
         {
             { OutlineType.Normal, new NormalElement(this) },
             { OutlineType.Fire, new FireElement(this) },
-            // { OutlineType.Water, new WaterElement(this) },  // New Water behavior
-            // { OutlineType.Earth, new EarthElement(this) },  // New Earth behavior
-            // { OutlineType.Air, new AirElement(this) }       // New Air behavior
+            { OutlineType.Water, new WaterElement(this) },  
+            // { OutlineType.Earth, new EarthElement(this) },  
+            // { OutlineType.Air, new AirElement(this) }       
         };
     }
-    // Initialize vectors and generate flow field
+
+    // Initializes the grid and sets up the flow field based on the selected behavior.
     void Start()
     {
-        vectors = new Vector2[cols, rows];  // Initialize the grid of vectors
-        behavior = behaviors[outlineType];   // Set the behavior based on the selected outline type
-        GenerateField();  // Generate the flow field based on the behavior
+        vectors = new Vector2[cols, rows];
+        behavior = behaviors[outlineType];
+        GenerateField();
     }
 
-    // Generate the flow field based on the selected behavior
+    // Generates the flow field by updating the flow vectors using the selected behavior.
     void GenerateField()
     {
         behavior.GenerateField(vectors, cols, rows, scale, increment, zOffset);
-        zOffset += 0.004f;  // Increment the zOffset for animation
+        zOffset += 0.004f;
     }
+    
+    // Retrieves the flow vector at a given position on the grid.
+    // Converts the global position to local grid coordinates and returns the flow vector.
+    public Vector2 GetForce(Vector2 position)
+    {
+        Vector2 localPosition = position - new Vector2(transform.position.x, transform.position.y);
 
-    // Draw the flow field gizmos in the scene view
+
+        int x = Mathf.Clamp(Mathf.FloorToInt(localPosition.x / scale), 0, cols - 1);
+        int y = Mathf.Clamp(Mathf.FloorToInt(localPosition.y / scale), 0, rows - 1);
+
+        return vectors[x, y];
+    }
+    // Sets the flow vector at a specific position on the grid.
+    // Updates the flow vector at the given grid coordinates.
+    public void SetForce(Vector2 position, Vector2 force)
+    {
+        vectors[(int)position.x, (int)position.y] = force;
+    }
+    
+    // Draws the flow field vectors in the Scene view using Gizmos.
+    // It visualizes the direction and strength of the flow.
     void OnDrawGizmos()
     {
-        if (!showFlowField || vectors == null) return;  // If flow field isn't shown, return early
+        if (!showFlowField || vectors == null) return;
 
-        Gizmos.color = Color.black;  // Set the gizmo color to black
+        Gizmos.color = Color.black;
 
-        // Draw lines representing the vectors in the flow field
         for (int y = 0; y < rows; y++)
         {
             for (int x = 0; x < cols; x++)
             {
-                // Calculate the position relative to the object transform
                 Vector3 pos = new Vector3(x * scale, y * scale, 0) + transform.position;
                 Gizmos.DrawLine(pos, pos + (Vector3)vectors[x, y] * scale);
             }
         }
 
-        // Call the behavior's OnDrawGizmos method for custom gizmo drawing
         behavior?.DrawGizmos(vectors, cols, rows, scale, this);
     }
-
-    // Draw selected gizmos (e.g., for fire behavior)
+    
+    
+    
+    // Draws additional gizmos when the object is selected in the editor.
+    // Specifically for visualizing fire behavior and effects.
     void OnDrawGizmosSelected()
     {
-        if (outlineType == OutlineType.Fire && vectors != null)
-        {
-            Gizmos.color = GetFlickeringColor();  // Get the flickering fire color
+        if (vectors == null) return;
 
-            // Draw lines for fire particles
+        if (outlineType == OutlineType.Fire)
+        {
+            Gizmos.color = GetFlickeringColor();
+
             for (int y = 0; y < rows; y++)
             {
                 for (int x = 0; x < cols; x++)
                 {
-                    if (!IsInFireMask(x, y)) continue;  // Skip if outside the fire mask
+                    if (!IsInFireMask(x, y)) continue;
+
+                    Vector3 pos = new Vector3(x * scale, y * scale, 0) + transform.position;
+                    Gizmos.DrawLine(pos, pos + (Vector3)vectors[x, y] * scale * 0.5f);
+                }
+            }
+        }
+        else if (outlineType == OutlineType.Water)
+        {
+            Gizmos.color = GetWaveColor();
+
+            for (int y = 0; y < rows; y++)
+            {
+                for (int x = 0; x < cols; x++)
+                {
+                    if (!IsInWaterMask(x, y)) continue;
 
                     Vector3 pos = new Vector3(x * scale, y * scale, 0) + transform.position;
                     Gizmos.DrawLine(pos, pos + (Vector3)vectors[x, y] * scale * 0.5f);
@@ -103,48 +143,78 @@ public class FlowFieldTest : MonoBehaviour
         }
     }
 
-    // Get the color that flickers between the start and end colors
+
+    #region Fire Element Code
+
+    // Fire settings (hidden from Inspector) - uses editor to display
+    [HideInInspector] public float fireScale = 9f;
+    [HideInInspector] public float flickerSpeed = 0f;
+    [HideInInspector] public float flickerAmount = 0f;
+    [HideInInspector] public float fireBaseWidth = 0f;
+    [HideInInspector] public float fireTipWidth = -2f;
+    [HideInInspector] public Color startColor = Color.red;
+    [HideInInspector] public Color middleColor = new Color(1f, 0.647f, 0f);
+    [HideInInspector] public Color endColor = Color.yellow;
+
+    // Returns a color that flickers between the start and end color for fire effect.
     public Color GetFlickeringColor()
     {
-        float t = Mathf.PingPong(Time.time * 0.5f, 1.0f);  // Create a flickering effect based on time
-        return Color.Lerp(startColor, endColor, t);  // Interpolate between start and end colors
+        float t = Mathf.PingPong(Time.time * 0.5f, 1.0f);
+        return Color.Lerp(startColor, endColor, t);
     }
-
-    // Check if the given position is within the fire mask
+    // Checks if a specific position is within the "fire mask" region.
+    // Checks if a specific position is within the "fire mask" region.
     public bool IsInFireMask(int x, int y)
     {
-        int midX = cols / 2;  // Middle of the grid in the x-axis
-        int baseY = 5;        // Base y-position for the fire
-        int height = 25;      // Height of the fire mask
+        int midX = cols / 2;
+        int baseY = 5;
+        int height = 25;
 
-        // If outside the fire region, return false
         if (y < baseY || y > baseY + height) return false;
 
-        float t = (y - baseY) / (float)height;  // Normalize the y-position in the fire mask
-        float flicker = Mathf.Sin(y * 0.5f + Time.time * flickerSpeed) * flickerAmount;  // Flickering effect
-        float noise = Mathf.PerlinNoise(x * 0.15f, y * 0.1f + Time.time * 0.3f) * 3f;  // Perlin noise for randomness
-        float width = (Mathf.Lerp(fireBaseWidth, fireTipWidth, t) + flicker + noise) * fireScale;  // Calculate the width of the fire
+        float t = (y - baseY) / (float)height;
+        float flicker = Mathf.Sin(y * 0.5f + Time.time * flickerSpeed) * flickerAmount;
+        float noise = Mathf.PerlinNoise(x * 0.15f, y * 0.1f + Time.time * 0.3f) * 3f;
+        float width = (Mathf.Lerp(fireBaseWidth, fireTipWidth, t) + flicker + noise) * fireScale;
 
-        // Return true if within the fire mask width
         return Mathf.Abs(x - midX) <= width;
     }
 
-    // Get the flow force at a specific position
-    public Vector2 GetForce(Vector2 position)
+    #endregion // End of Fire Element Code
+    
+    
+    
+    
+    #region Water Element Code
+
+    // Water settings (hidden from Inspector) - uses editor to display
+    [HideInInspector] public float waveAmplitude = 4f;
+    [HideInInspector] public float waveFrequency = 0.3f;
+    [HideInInspector] public float waveSpeed = 2f;
+    [HideInInspector] public float waterLevel = 12f; // vertical center of the wave
+    [HideInInspector] public Color waterStartColor = Color.cyan;
+    [HideInInspector] public Color waterEndColor = Color.blue;
+
+    // Returns a dynamic wave color between cyan and blue.
+    public Color GetWaveColor()
     {
-        // Convert the position to the local grid coordinates
-        Vector2 localPosition = position - new Vector2(transform.position.x, transform.position.y);
-
-        // Calculate the grid coordinates for the position
-        int x = Mathf.Clamp(Mathf.FloorToInt(localPosition.x / scale), 0, cols - 1);
-        int y = Mathf.Clamp(Mathf.FloorToInt(localPosition.y / scale), 0, rows - 1);
-
-        return vectors[x, y];  // Return the flow vector at the given grid position
+        float t = Mathf.PingPong(Time.time * 0.5f, 1.0f);
+        return Color.Lerp(waterStartColor, waterEndColor, t);
     }
 
-    // Set the flow force at a specific position
-    public void SetForce(Vector2 position, Vector2 force)
+    // Checks if a specific position is within the "water mask" (splash zone).
+    public bool IsInWaterMask(int x, int y)
     {
-        vectors[(int)position.x, (int)position.y] = force;  // Set the force at the specified grid coordinates
+        float wave = Mathf.Sin((x + Time.time * waveSpeed) * waveFrequency) * waveAmplitude;
+        return Mathf.Abs(y - waterLevel) <= wave;
     }
+
+    #endregion // End of Water Element Code
+    
+    
+    
+    
+    
+    
+    
 }

@@ -30,4 +30,9 @@ public abstract class ElementBase
     {
         // No default gizmo drawing
     }
+    
+    // public virtual void DrawSelectedGizmos(Vector2[,] vectors, int cols, int rows, float scale) { }
+    
+    
+    
 }

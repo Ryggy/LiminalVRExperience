@@ -72,7 +72,7 @@ public class FlowFieldTest : MonoBehaviour
     }
     void OnDrawGizmosSelected()
     {
-        if (outlineType == OutlineType.Fire)
+        if (outlineType == OutlineType.Fire && vectors != null)
         {
             Gizmos.color = GetFlickeringColor();
             for (int y = 0; y < rows; y++)
@@ -80,12 +80,14 @@ public class FlowFieldTest : MonoBehaviour
                 for (int x = 0; x < cols; x++)
                 {
                     if (!IsInFireMask(x, y)) continue;
-                    Vector2 pos = new Vector2(x * scale, y * scale);
-                    Gizmos.DrawLine(pos, pos + vectors[x, y] * scale * 0.5f);
+
+                    Vector3 pos = new Vector3(x * scale, y * scale, 0) + transform.position;
+                    Gizmos.DrawLine(pos, pos + (Vector3)vectors[x, y] * scale * 0.5f);
                 }
             }
         }
     }
+    
 
     public Color GetFlickeringColor()
     {

@@ -59,8 +59,9 @@ public class FlowFieldTest : MonoBehaviour
         for (int y = 0; y < rows; y++)
         for (int x = 0; x < cols; x++)
         {
-            Vector2 pos = new Vector2(x * scale, y * scale);
-            Gizmos.DrawLine(pos, pos + vectors[x, y] * scale * 0.5f);
+            // Adjust the position to be relative to the transform position
+            Vector3 pos = new Vector3(x * scale, y * scale, 0) + new Vector3(transform.position.x, transform.position.y, transform.position.z);
+            Gizmos.DrawLine(pos, pos + (Vector3)vectors[x, y] * scale);
         }
 
   
@@ -71,7 +72,7 @@ public class FlowFieldTest : MonoBehaviour
     }
     void OnDrawGizmosSelected()
     {
-        if (outlineType == OutlineType.Fire)
+        if (outlineType == OutlineType.Fire && vectors != null)
         {
             Gizmos.color = GetFlickeringColor();
             for (int y = 0; y < rows; y++)
@@ -79,12 +80,14 @@ public class FlowFieldTest : MonoBehaviour
                 for (int x = 0; x < cols; x++)
                 {
                     if (!IsInFireMask(x, y)) continue;
-                    Vector2 pos = new Vector2(x * scale, y * scale);
-                    Gizmos.DrawLine(pos, pos + vectors[x, y] * scale * 0.5f);
+
+                    Vector3 pos = new Vector3(x * scale, y * scale, 0) + transform.position;
+                    Gizmos.DrawLine(pos, pos + (Vector3)vectors[x, y] * scale * 0.5f);
                 }
             }
         }
     }
+    
 
     public Color GetFlickeringColor()
     {
@@ -107,8 +110,13 @@ public class FlowFieldTest : MonoBehaviour
     
     public Vector2 GetForce(Vector2 position)
     {
-        int x = Mathf.Clamp(Mathf.FloorToInt(position.x / scale), 0, cols - 1);
-        int y = Mathf.Clamp(Mathf.FloorToInt(position.y / scale), 0, rows - 1);
+        // Adjust the position by subtracting the object's position
+        Vector2 localPosition = position - new Vector2(transform.position.x, transform.position.y);
+        
+        // Calculate grid coordinates based on the adjusted local position
+        int x = Mathf.Clamp(Mathf.FloorToInt(localPosition.x / scale), 0, cols - 1);
+        int y = Mathf.Clamp(Mathf.FloorToInt(localPosition.y / scale), 0, rows - 1);
+        
         return vectors[x, y];
     }
 
@@ -116,11 +124,5 @@ public class FlowFieldTest : MonoBehaviour
     {
         vectors[(int)position.x, (int)position.y] = force;
     }
-    
-    void Update()
-    {
-        // Optional: uncomment to regenerate every frame
-        // GenerateField();
-    }
-   
+
 }

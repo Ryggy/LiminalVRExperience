@@ -71,10 +71,10 @@ public class FlowFieldEditor : Editor
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Water Field Settings", EditorStyles.boldLabel);
         // Water-specific settings can be added here in the future
-        flowFieldTest.waveAmplitude = EditorGUILayout.Slider("Wave Amplitude", flowFieldTest.waveAmplitude, 0f, 10f);
-        flowFieldTest.waveFrequency = EditorGUILayout.Slider("Wave Frequency", flowFieldTest.waveFrequency, 0f, 2f);
-        flowFieldTest.waveSpeed = EditorGUILayout.Slider("Wave Speed", flowFieldTest.waveSpeed, 0f, 10f);
-        flowFieldTest.waterLevel = EditorGUILayout.Slider("Water Level", flowFieldTest.waterLevel, 0f, 40f);
+        flowFieldTest.waveAmplitude = EditorGUILayout.Slider("Wave Amplitude", flowFieldTest.waveAmplitude, 0f, 1000f);
+        flowFieldTest.waveFrequency = EditorGUILayout.Slider("Wave Frequency", flowFieldTest.waveFrequency, 0f, 2000f);
+        flowFieldTest.waveSpeed = EditorGUILayout.Slider("Wave Speed", flowFieldTest.waveSpeed, 0f, 1000f);
+        flowFieldTest.waterLevel = EditorGUILayout.Slider("Water Level", flowFieldTest.waterLevel, 0f, 4000f);
         flowFieldTest.waterStartColor = EditorGUILayout.ColorField("Water Start Color", flowFieldTest.waterStartColor);
         flowFieldTest.waterEndColor = EditorGUILayout.ColorField("Water End Color", flowFieldTest.waterEndColor);
         

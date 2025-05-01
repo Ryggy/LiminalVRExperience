@@ -188,10 +188,10 @@ public class FlowFieldTest : MonoBehaviour
     #region Water Element Code
 
     // Water settings (hidden from Inspector) - uses editor to display
-    [HideInInspector] public float waveAmplitude = 4f;
-    [HideInInspector] public float waveFrequency = 0.3f;
-    [HideInInspector] public float waveSpeed = 2f;
-    [HideInInspector] public float waterLevel = 12f; // vertical center of the wave
+    [HideInInspector] public float waveAmplitude = 90f;
+    [HideInInspector] public float waveFrequency = 0.1f;
+    [HideInInspector] public float waveSpeed = 15f;
+    [HideInInspector] public float waterLevel = 0f; // vertical center of the wave
     [HideInInspector] public Color waterStartColor = Color.cyan;
     [HideInInspector] public Color waterEndColor = Color.blue;
 

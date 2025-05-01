@@ -128,7 +128,7 @@ public class Particle
     private Vector2 stuckPosition;
     private float randomSeed;
     private float elementZoneAge = 0f;
-    private const float elementZoneLifespan = 3f;
+    private const float elementZoneLifespan = 100f; // lower value, can reduce clumping
     private bool shrinking = false;
     private static HashSet<Vector2> takenElementZonePositions = new HashSet<Vector2>();
 

@@ -97,6 +97,7 @@ public class Particle
 
         particle.position = new Vector3(Position.x, Position.y, flowFieldManager.transform.position.z);
     }
+
     private void Respawn()
     {
         isStuck = false;
@@ -115,9 +116,8 @@ public class Particle
         velocity = Vector2.zero;
         acceleration = Vector2.zero;
     }
-    
-    public ParticleSystem.Particle GetParticle() => particle;
 
+    public ParticleSystem.Particle GetParticle() => particle;
 
 
     #region Element Zone Logic
@@ -139,20 +139,39 @@ public class Particle
         int x = Mathf.FloorToInt(Position.x / field.scale);
         int y = Mathf.FloorToInt(Position.y / field.scale);
 
-        if (field.outlineType != FlowFieldTest.OutlineType.Fire || !field.IsInFireMask(x, y))
-            return false; // for fire zone
-
-        if (!isStuck)
+        // Check for Fire element
+        if (field.outlineType == FlowFieldTest.OutlineType.Fire && field.IsInFireMask(x, y))
         {
-            stuckPosition = GetUniqueElementZonePosition(field);
-            Position = stuckPosition;
-            isStuck = true;
-            elementZoneAge = 0f;
-            shrinking = false;
+            if (!isStuck)
+            {
+                stuckPosition = GetUniqueElementZonePosition(field);
+                Position = stuckPosition;
+                isStuck = true;
+                elementZoneAge = 0f;
+                shrinking = false;
+            }
+
+            particle.startColor = field.GetFlickeringColor();
+            return true;
         }
 
-        particle.startColor = field.GetFlickeringColor();
-        return true;
+        // Check for Water element
+        if (field.outlineType == FlowFieldTest.OutlineType.Water && field.IsInWaterMask(x, y))
+        {
+            if (!isStuck)
+            {
+                stuckPosition = GetUniqueElementZonePosition(field);
+                Position = stuckPosition;
+                isStuck = true;
+                elementZoneAge = 0f;
+                shrinking = false;
+            }
+
+            particle.startColor = field.GetWaveColor(); // Use water's dynamic color
+            return true;
+        }
+
+        return false;
     }
 
     private void ExitElementZone()
@@ -166,26 +185,52 @@ public class Particle
     {
         elementZoneAge += Time.deltaTime;
 
-        // Flicker movement
-        float flickerSpeed = 3f;
-        float flickerAmount = 0.3f;
-
-        Vector2 flicker = new Vector2(
-            Mathf.Sin(Time.time * flickerSpeed + randomSeed) * flickerAmount,
-            Mathf.Cos(Time.time * flickerSpeed + randomSeed) * flickerAmount
-        );
-
-        Vector2 upwardDrift = new Vector2(0, elementZoneAge * 0.5f);
-        particle.position = stuckPosition + flicker + upwardDrift;
-
-        if (elementZoneAge >= elementZoneLifespan)
-            shrinking = true;
-
-        if (shrinking)
+        // Fire Element effects
         {
-            particle.startSize = Mathf.Max(0f, particle.startSize - Time.deltaTime * 0.05f);
-            if (particle.startSize <= 0.05f)
-                ResetParticleToOriginal();
+            // Fire flicker and upward drift
+            float flickerSpeed = 3f;
+            float flickerAmount = 0.3f;
+
+            Vector2 flicker = new Vector2(
+                Mathf.Sin(Time.time * flickerSpeed + randomSeed) * flickerAmount,
+                Mathf.Cos(Time.time * flickerSpeed + randomSeed) * flickerAmount
+            );
+
+            Vector2 upwardDrift = new Vector2(0, elementZoneAge * 0.5f);
+            particle.position = stuckPosition + flicker + upwardDrift;
+
+            if (elementZoneAge >= elementZoneLifespan)
+                shrinking = true;
+
+            if (shrinking)
+            {
+                particle.startSize = Mathf.Max(0f, particle.startSize - Time.deltaTime * 0.05f);
+                if (particle.startSize <= 0.05f)
+                    ResetParticleToOriginal();
+            }
+        }
+
+        // Water Element effects
+        {
+            // Water movement could be a simple drifting effect
+            Vector2 drift = new Vector2(
+                Mathf.Sin(Time.time * 0.5f + randomSeed) * 0.1f,
+                Mathf.Cos(Time.time * 0.5f + randomSeed) * 0.1f
+            );
+
+            Vector2 upwardDrift = new Vector2(0, elementZoneAge * 0.2f);
+            particle.position = stuckPosition + drift + upwardDrift;
+
+            // Gradually fade out if desired
+            if (elementZoneAge >= elementZoneLifespan)
+                shrinking = true;
+
+            if (shrinking)
+            {
+                particle.startSize = Mathf.Max(0f, particle.startSize - Time.deltaTime * 0.05f);
+                if (particle.startSize <= 0.05f)
+                    ResetParticleToOriginal();
+            }
         }
     }
 

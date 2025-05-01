@@ -71,13 +71,12 @@ public class FlowFieldEditor : Editor
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Water Field Settings", EditorStyles.boldLabel);
         // Water-specific settings can be added here in the future
-        EditorGUILayout.Slider(serializedObject.FindProperty("waveAmplitude"), 0f, 10f, new GUIContent("Wave Amplitude"));
-        EditorGUILayout.Slider(serializedObject.FindProperty("waveFrequency"), 0f, 2f, new GUIContent("Wave Frequency"));
-        EditorGUILayout.Slider(serializedObject.FindProperty("waveSpeed"), 0f, 10f, new GUIContent("Wave Speed"));
-        EditorGUILayout.Slider(serializedObject.FindProperty("waterLevel"), 0f, 40f, new GUIContent("Water Level"));
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("waterStartColor"), new GUIContent("Start Color"));
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("waterEndColor"), new GUIContent("End Color"));
-        
+        flowFieldTest.waveAmplitude = EditorGUILayout.Slider("Wave Amplitude", flowFieldTest.waveAmplitude, 0f, 10f);
+        flowFieldTest.waveFrequency = EditorGUILayout.Slider("Wave Frequency", flowFieldTest.waveFrequency, 0f, 2f);
+        flowFieldTest.waveSpeed = EditorGUILayout.Slider("Wave Speed", flowFieldTest.waveSpeed, 0f, 10f);
+        flowFieldTest.waterLevel = EditorGUILayout.Slider("Water Level", flowFieldTest.waterLevel, 0f, 40f);
+        flowFieldTest.waterStartColor = EditorGUILayout.ColorField("Water Start Color", flowFieldTest.waterStartColor);
+        flowFieldTest.waterEndColor = EditorGUILayout.ColorField("Water End Color", flowFieldTest.waterEndColor);
         
         
         

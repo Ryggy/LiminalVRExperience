@@ -17228,8 +17228,9 @@ MonoBehaviour:
   rows: 80
   scale: 0.1
   increment: 0.1
-  showFlowField: 0
-  fireScale: 9
+  showFlowField: 1
+  outlineType: 0
+  fireScale: 30
   flickerSpeed: 0
   flickerAmount: 0
   fireBaseWidth: 0
@@ -17237,7 +17238,12 @@ MonoBehaviour:
   startColor: {r: 1, g: 0.14576916, b: 0, a: 1}
   middleColor: {r: 1, g: 0.647, b: 0, a: 1}
   endColor: {r: 1, g: 0.5013487, b: 0, a: 1}
-  outlineType: 0
+  waveAmplitude: 90
+  waveFrequency: 0.1
+  waveSpeed: 15
+  waterLevel: 0
+  waterStartColor: {r: 0, g: 0.6642294, b: 1, a: 1}
+  waterEndColor: {r: 0, g: 0, b: 1, a: 1}
 --- !u!4 &1949151991
 Transform:
   m_ObjectHideFlags: 0

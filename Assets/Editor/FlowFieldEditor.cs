@@ -75,7 +75,10 @@ public class FlowFieldEditor : Editor
         flowFieldTest.waveFrequency = EditorGUILayout.Slider("Wave Frequency", flowFieldTest.waveFrequency, 0f, 2000f);
         flowFieldTest.waveSpeed = EditorGUILayout.Slider("Wave Speed", flowFieldTest.waveSpeed, 0f, 1000f);
         flowFieldTest.waterLevel = EditorGUILayout.Slider("Water Level", flowFieldTest.waterLevel, 0f, 4000f);
+        
         flowFieldTest.waterStartColor = EditorGUILayout.ColorField("Water Start Color", flowFieldTest.waterStartColor);
+        
+        flowFieldTest.waterMiddleColor = EditorGUILayout.ColorField("water Middle Color", flowFieldTest.waterMiddleColor);
         flowFieldTest.waterEndColor = EditorGUILayout.ColorField("Water End Color", flowFieldTest.waterEndColor);
         
         
@@ -87,11 +90,15 @@ public class FlowFieldEditor : Editor
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Air Field Settings", EditorStyles.boldLabel);
         // Air Field Settings (New section for air)
-        flowFieldTest.windStrength = EditorGUILayout.Slider("Wind Strength", flowFieldTest.windStrength, 0f, 10f);
-        flowFieldTest.windFrequency = EditorGUILayout.Slider("Wind Frequency", flowFieldTest.windFrequency, 0f, 5f);
-        flowFieldTest.windSpeed = EditorGUILayout.Slider("Wind Speed", flowFieldTest.windSpeed, 0f, 10f);
-        flowFieldTest.airTurbulence = EditorGUILayout.Slider("Air Turbulence", flowFieldTest.airTurbulence, 0f, 1f);
+        flowFieldTest.windStrength = EditorGUILayout.Slider("Wind Strength", flowFieldTest.windStrength, -10f, 10f);
+        flowFieldTest.windFrequency = EditorGUILayout.Slider("Wind Frequency", flowFieldTest.windFrequency, -10f, 50f);
+        flowFieldTest.windSpeed = EditorGUILayout.Slider("Wind Speed", flowFieldTest.windSpeed, -10f, 10f);
+        flowFieldTest.airTurbulence = EditorGUILayout.Slider("Air Turbulence", flowFieldTest.airTurbulence, -10f, 100f);
+        flowFieldTest.airBaseWidth = EditorGUILayout.Slider("Air airBaseWidth", flowFieldTest.airBaseWidth, -10f, 100f);
+        flowFieldTest.airTipWidth = EditorGUILayout.Slider("Air airTipWidth", flowFieldTest.airTipWidth, -10f, 100f);
+        
         flowFieldTest.airStartColor = EditorGUILayout.ColorField("Air Start Color", flowFieldTest.airStartColor);
+        flowFieldTest.airMiddleColor = EditorGUILayout.ColorField("air Middle Color", flowFieldTest.airMiddleColor);
         flowFieldTest.airEndColor = EditorGUILayout.ColorField("Air End Color", flowFieldTest.airEndColor);
 
         

@@ -17,7 +17,7 @@ public class FlowFieldTest : MonoBehaviour
     [HideInInspector] private float zOffset = 0f;
     [HideInInspector] private Vector2[,] vectors;
     [HideInInspector] public bool showFlowField = true;
-    
+
     // Outline type setting (hidden from Inspector) uses editor to display
     [HideInInspector] public OutlineType outlineType = OutlineType.Fire;
 
@@ -43,7 +43,7 @@ public class FlowFieldTest : MonoBehaviour
         {
             { OutlineType.Normal, new NormalElement(this) },
             { OutlineType.Fire, new FireElement(this) },
-            { OutlineType.Water, new WaterElement(this) },  
+            { OutlineType.Water, new WaterElement(this) },
             // { OutlineType.Earth, new EarthElement(this) },  
             // { OutlineType.Air, new AirElement(this) }       
         };
@@ -63,7 +63,7 @@ public class FlowFieldTest : MonoBehaviour
         behavior.GenerateField(vectors, cols, rows, scale, increment, zOffset);
         zOffset += 0.004f;
     }
-    
+
     // Retrieves the flow vector at a given position on the grid.
     // Converts the global position to local grid coordinates and returns the flow vector.
     public Vector2 GetForce(Vector2 position)
@@ -76,13 +76,14 @@ public class FlowFieldTest : MonoBehaviour
 
         return vectors[x, y];
     }
+
     // Sets the flow vector at a specific position on the grid.
     // Updates the flow vector at the given grid coordinates.
     public void SetForce(Vector2 position, Vector2 force)
     {
         vectors[(int)position.x, (int)position.y] = force;
     }
-    
+
     // Draws the flow field vectors in the Scene view using Gizmos.
     // It visualizes the direction and strength of the flow.
     void OnDrawGizmos()
@@ -102,9 +103,8 @@ public class FlowFieldTest : MonoBehaviour
 
         behavior?.DrawGizmos(vectors, cols, rows, scale, this);
     }
-    
-    
-    
+
+
     // Draws additional gizmos when the object is selected in the editor.
     // Specifically for visualizing fire behavior and effects.
     // needs to  be adde dinto draw gizmos
@@ -168,7 +168,6 @@ public class FlowFieldTest : MonoBehaviour
                 }
             }
         }
-        
     }
 
 
@@ -188,8 +187,9 @@ public class FlowFieldTest : MonoBehaviour
     public Color GetFlickeringColor()
     {
         float t = Mathf.PingPong(Time.time * 0.5f, 1.0f);
-        return Color.Lerp(startColor, endColor, t);
+        return Color.Lerp(startColor, middleColor, Mathf.PingPong(Time.time * 0.2f, 1.0f));
     }
+
     // Checks if a specific position is within the "fire mask" region.
     // Checks if a specific position is within the "fire mask" region.
     public bool IsInFireMask(int x, int y)
@@ -209,10 +209,8 @@ public class FlowFieldTest : MonoBehaviour
     }
 
     #endregion // End of Fire Element Code
-    
-    
-    
-    
+
+
     #region Water Element Code
 
     // Water settings (hidden from Inspector) - uses editor to display
@@ -221,13 +219,14 @@ public class FlowFieldTest : MonoBehaviour
     [HideInInspector] public float waveSpeed = 15f;
     [HideInInspector] public float waterLevel = 0f; // vertical center of the wave
     [HideInInspector] public Color waterStartColor = Color.cyan;
+    [HideInInspector] public Color waterMiddleColor = new Color(0f, 0.5f, 1f);
     [HideInInspector] public Color waterEndColor = Color.blue;
 
     // Returns a dynamic wave color between cyan and blue.
     public Color GetWaveColor()
     {
         float t = Mathf.PingPong(Time.time * 0.5f, 1.0f);
-        return Color.Lerp(waterStartColor, waterEndColor, t);
+        return Color.Lerp(waterStartColor, waterMiddleColor, Mathf.PingPong(Time.time * 0.2f, 1.0f));
     }
 
     // Checks if a specific position is within the "water mask" (splash zone).
@@ -238,43 +237,49 @@ public class FlowFieldTest : MonoBehaviour
     }
 
     #endregion // End of Water Element Code
-    
-    
-    
+
+
     #region Air Element Code
 
 // Air settings (hidden from Inspector) - uses editor to display
-    [HideInInspector] public float windStrength = 5f;  // The intensity of the wind flow
-    [HideInInspector] public float windFrequency = 0.2f;  // How frequently the air swirls
-    [HideInInspector] public float windSpeed = 1.0f;  // Speed at which the wind moves across the field
-    [HideInInspector] public float airTurbulence = 0.3f;  // Amount of randomness for wind disturbance
-    [HideInInspector] public Color airStartColor = Color.white;  // Start color for the air element (wind)
-    [HideInInspector] public Color airEndColor = Color.gray;  // End color for the air element
+    [HideInInspector] public float windStrength = 5f; // The intensity of the wind flow (like waveAmplitude)
+    [HideInInspector] public float windFrequency = 0.1f; // How frequently the air swirls (like waveFrequency)
+    [HideInInspector] public float windSpeed = 15f; // Speed at which the wind moves across the field (like waveSpeed)
+    [HideInInspector] public float airTurbulence = 0f; // Vertical center of the wind flow (like waterLevel)
+    [HideInInspector] public float airBaseWidth = 0f; // Base width of the air flow
+    [HideInInspector] public float airTipWidth = -2f; // Tip width of the air flow
+    [HideInInspector] public Color airStartColor = Color.white; // Start color for the air element (wind)
+    [HideInInspector] public Color airMiddleColor = new Color(0.5f, 0.8f, 1f); // Light blue for gentle wind
+    [HideInInspector] public Color airEndColor = Color.gray; // End color for the air element
 
 // Returns a dynamic wind color between white and gray.
     public Color GetWindColor()
     {
         float t = Mathf.PingPong(Time.time * 0.5f, 1.0f);
-        return Color.Lerp(airStartColor, airEndColor, t);
+        return Color.Lerp(airStartColor, airMiddleColor, Mathf.PingPong(Time.time * 0.2f, 1.0f));
     }
 
-// Checks if a specific position is within the "air flow zone" (where the wind is present).
+// Checks if a specific position is within the "air flow zone" (similar to fire splash zone).
     public bool IsInAirFlowZone(int x, int y)
     {
-        // Using sinusoidal movement for the air, with slight random turbulence
-        float windX = Mathf.Sin((x + Time.time * windSpeed) * windFrequency) * windStrength;
-        float windY = Mathf.Cos((y + Time.time * windSpeed) * windFrequency) * windStrength;
+        int midX = cols / 2;
+        int baseY = 5; // Air base height
+        int height = 25; // Air flow height range
 
-        // Apply random turbulence to simulate natural air disturbances
-        windX += Random.Range(-airTurbulence, airTurbulence);
-        windY += Random.Range(-airTurbulence, airTurbulence);
+        // Check if the position is outside the vertical range of the air flow zone
+        if (y < baseY || y > baseY + height) return false;
 
-        // Return true if the position is within the range of air flow strength
-        return Mathf.Abs(windX) < windStrength && Mathf.Abs(windY) < windStrength;
+        // Calculate the wind effect along the Y-axis and apply wind turbulence
+        float t = (y - baseY) / (float)height;
+        float flicker = Mathf.Sin(y * 0.5f + Time.time * windFrequency) * windStrength;
+        float noise = Mathf.PerlinNoise(x * 0.15f, y * 0.1f + Time.time * 0.3f) * 3f;
+
+        // Calculate width of the air flow at each Y level
+        float width = (Mathf.Lerp(airBaseWidth, airTipWidth, t) + flicker + noise) * windStrength;
+
+        // Check if the X position is within the air flow width
+        return Mathf.Abs(x - midX) <= width;
     }
 
     #endregion // End of Air Element Code
-    
-    
-    
 }

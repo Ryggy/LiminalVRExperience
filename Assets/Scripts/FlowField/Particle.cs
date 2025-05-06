@@ -295,20 +295,30 @@ public class Particle
 
     private void UpdateAirEffect()
     {
-        Vector2 windDrift = new Vector2(
-            Mathf.Sin(Time.time * 1.0f + randomSeed) * 0.15f,
-            Mathf.Cos(Time.time * 1.0f + randomSeed) * 0.15f
-        );
+        // Time-based angle for smooth sinusoidal motion (controls the direction and speed of the movement)
+        float angle = Time.time * 1.5f + randomSeed; // Controls the speed of movement
+        float verticalOscillation = Mathf.Sin(angle) * 0.3f; // Vertical oscillation (up and down)
+        float horizontalOscillation = Mathf.Cos(angle * 1.5f) * 0.5f; // Diagonal motion on the X-axis (zig-zag)
 
-        Vector2 upwardPush = new Vector2(0, elementZoneAge * 0.3f);
-        particle.position = stuckPosition + windDrift + upwardPush;
+        // Combining both horizontal and vertical oscillations to create diagonal up-and-down movement
+        Vector2 diagonalDrift = new Vector2(horizontalOscillation, verticalOscillation);
 
+        // Add upward or downward push depending on the age of the element zone (optional for more complex behavior)
+        Vector2 dynamicPush = new Vector2(0, elementZoneAge * 0.1f); // Dynamic upward or downward motion based on age
+
+        // Update the particle's position with diagonal oscillation and dynamic push
+        particle.position = stuckPosition + diagonalDrift + dynamicPush;
+
+        // Shrinking effect after reaching the end of the lifespan
         if (elementZoneAge >= elementZoneLifespan)
             shrinking = true;
 
         if (shrinking)
         {
+            // Gradually shrink the particle size
             particle.startSize = Mathf.Max(0f, particle.startSize - Time.deltaTime * 0.08f);
+
+            // Reset particle when it reaches a small size
             if (particle.startSize <= 0.05f)
                 ResetParticleToOriginal();
         }

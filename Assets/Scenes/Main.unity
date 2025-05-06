@@ -17152,6 +17152,14 @@ MonoBehaviour:
   waterLevel: 0
   waterStartColor: {r: 0, g: 0.6642294, b: 1, a: 1}
   waterEndColor: {r: 0, g: 0, b: 1, a: 1}
+  windStrength: 1
+  windFrequency: 10
+  windSpeed: 0
+  airTurbulence: 0
+  airBaseWidth: 2
+  airTipWidth: 30
+  airStartColor: {r: 1, g: 1, b: 1, a: 1}
+  airEndColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
 --- !u!4 &1949151991
 Transform:
   m_ObjectHideFlags: 0

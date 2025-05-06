@@ -47,10 +47,23 @@ public class Particle
 
         wasInElementZoneLastFrame = isInElementZoneNow;
 
+        // if (isStuck)
+        //     UpdateElementZoneEffect();
+        // else
+        //     UpdateMovement();
+        
+        
+        
+        
         if (isStuck)
+        {
             UpdateElementZoneEffect();
+        }
         else
+        {
             UpdateMovement();
+            ApplyNormalPulseEffect(field);
+        }
     }
 
     public void ApplyForce(Vector2 force) => acceleration += force;
@@ -115,6 +128,22 @@ public class Particle
 
         velocity = Vector2.zero;
         acceleration = Vector2.zero;
+    }
+    
+    
+    
+    // pusling effect
+    
+    private void ApplyNormalPulseEffect(FlowFieldTest field)
+    {
+        if (field.outlineType != FlowFieldTest.OutlineType.Normal || !flowFieldManager.enableNormalSizePulsing)
+            return;
+
+        float pulseSpeed = flowFieldManager.normalPulseSpeed;
+        float pulseAmount = flowFieldManager.normalPulseAmount;
+
+        float sizeOscillation = Mathf.Sin(Time.time * pulseSpeed + randomSeed) * pulseAmount;
+        particle.startSize = 0.1f + sizeOscillation;
     }
 
     public ParticleSystem.Particle GetParticle() => particle;

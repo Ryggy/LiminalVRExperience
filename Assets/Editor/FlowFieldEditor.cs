@@ -86,7 +86,14 @@ public class FlowFieldEditor : Editor
         
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Air Field Settings", EditorStyles.boldLabel);
-        // Water-specific settings can be added here in the future
+        // Air Field Settings (New section for air)
+        flowFieldTest.windStrength = EditorGUILayout.Slider("Wind Strength", flowFieldTest.windStrength, 0f, 10f);
+        flowFieldTest.windFrequency = EditorGUILayout.Slider("Wind Frequency", flowFieldTest.windFrequency, 0f, 5f);
+        flowFieldTest.windSpeed = EditorGUILayout.Slider("Wind Speed", flowFieldTest.windSpeed, 0f, 10f);
+        flowFieldTest.airTurbulence = EditorGUILayout.Slider("Air Turbulence", flowFieldTest.airTurbulence, 0f, 1f);
+        flowFieldTest.airStartColor = EditorGUILayout.ColorField("Air Start Color", flowFieldTest.airStartColor);
+        flowFieldTest.airEndColor = EditorGUILayout.ColorField("Air End Color", flowFieldTest.airEndColor);
+
         
         // Add a black line to separate sections
         DrawSeparator();

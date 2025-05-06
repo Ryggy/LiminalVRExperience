@@ -25,10 +25,11 @@ public class FlowFieldManager : MonoBehaviour
         particles = new List<Particle>();
         particleArray = new ParticleSystem.Particle[numParticles];
 
+        // Pass both FlowFieldManager (this) and the FlowFieldTest instance (field)
         for (int i = 0; i < numParticles; i++)
         {
-            Vector3 startPos = new Vector3(Random.Range(0, fieldWidth), Random.Range(0, fieldHeight), 0) + transform.position;
-            particles.Add(new Particle(this, startPos, 0.005f));
+            Vector2 startPos = new Vector2(Random.Range(0, fieldWidth), Random.Range(0, fieldHeight)) + (Vector2)transform.position;
+            particles.Add(new Particle(this, flowField, startPos, 0.005f));  // Pass FlowFieldManager and FlowFieldTest
         }
     }
 
@@ -50,7 +51,7 @@ public class FlowFieldManager : MonoBehaviour
     // pusling effect stuff
     [Header("Normal Mode Particle Animation")]
     public bool enableNormalSizePulsing = true;
-    [Range(0f, 0.2f)]
+    [Range(0f, 10f)]
     public float normalPulseAmount = 0.05f;
     [Range(0.1f, 10f)]
     public float normalPulseSpeed = 2f;

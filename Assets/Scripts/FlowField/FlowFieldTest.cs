@@ -107,6 +107,7 @@ public class FlowFieldTest : MonoBehaviour
     
     // Draws additional gizmos when the object is selected in the editor.
     // Specifically for visualizing fire behavior and effects.
+    // needs to  be adde dinto draw gizmos
     void OnDrawGizmosSelected()
     {
         if (vectors == null) return;
@@ -141,6 +142,33 @@ public class FlowFieldTest : MonoBehaviour
                 }
             }
         }
+        else if (outlineType == OutlineType.Air)
+        {
+            Gizmos.color = GetWindColor();
+
+            for (int y = 0; y < rows; y++)
+            {
+                for (int x = 0; x < cols; x++)
+                {
+                    if (!IsInAirFlowZone(x, y)) continue;
+
+                    Vector3 pos = new Vector3(x * scale, y * scale, 0) + transform.position;
+
+                    // Simulate swirling effect
+                    float swirlX = Mathf.Sin((x + Time.time * windSpeed) * windFrequency) * windStrength;
+                    float swirlY = Mathf.Cos((y + Time.time * windSpeed) * windFrequency) * windStrength;
+
+                    // Add turbulence
+                    swirlX += Random.Range(-airTurbulence, airTurbulence);
+                    swirlY += Random.Range(-airTurbulence, airTurbulence);
+
+                    Vector3 swirlVector = new Vector3(swirlX, swirlY, 0).normalized;
+
+                    Gizmos.DrawLine(pos, pos + swirlVector * scale * 0.5f);
+                }
+            }
+        }
+        
     }
 
 
@@ -213,7 +241,39 @@ public class FlowFieldTest : MonoBehaviour
     
     
     
-    
+    #region Air Element Code
+
+// Air settings (hidden from Inspector) - uses editor to display
+    [HideInInspector] public float windStrength = 5f;  // The intensity of the wind flow
+    [HideInInspector] public float windFrequency = 0.2f;  // How frequently the air swirls
+    [HideInInspector] public float windSpeed = 1.0f;  // Speed at which the wind moves across the field
+    [HideInInspector] public float airTurbulence = 0.3f;  // Amount of randomness for wind disturbance
+    [HideInInspector] public Color airStartColor = Color.white;  // Start color for the air element (wind)
+    [HideInInspector] public Color airEndColor = Color.gray;  // End color for the air element
+
+// Returns a dynamic wind color between white and gray.
+    public Color GetWindColor()
+    {
+        float t = Mathf.PingPong(Time.time * 0.5f, 1.0f);
+        return Color.Lerp(airStartColor, airEndColor, t);
+    }
+
+// Checks if a specific position is within the "air flow zone" (where the wind is present).
+    public bool IsInAirFlowZone(int x, int y)
+    {
+        // Using sinusoidal movement for the air, with slight random turbulence
+        float windX = Mathf.Sin((x + Time.time * windSpeed) * windFrequency) * windStrength;
+        float windY = Mathf.Cos((y + Time.time * windSpeed) * windFrequency) * windStrength;
+
+        // Apply random turbulence to simulate natural air disturbances
+        windX += Random.Range(-airTurbulence, airTurbulence);
+        windY += Random.Range(-airTurbulence, airTurbulence);
+
+        // Return true if the position is within the range of air flow strength
+        return Mathf.Abs(windX) < windStrength && Mathf.Abs(windY) < windStrength;
+    }
+
+    #endregion // End of Air Element Code
     
     
     

@@ -45,7 +45,7 @@ public class FlowFieldTest : MonoBehaviour
             { OutlineType.Fire, new FireElement(this) },
             { OutlineType.Water, new WaterElement(this) },
             // { OutlineType.Earth, new EarthElement(this) },  
-            // { OutlineType.Air, new AirElement(this) }       
+            { OutlineType.Air, new AirElement(this) }       
         };
     }
 
@@ -63,6 +63,41 @@ public class FlowFieldTest : MonoBehaviour
         behavior.GenerateField(vectors, cols, rows, scale, increment, zOffset);
         zOffset += 0.004f;
     }
+
+    // This method is used to regenerate the field based on outline type change
+    public void RegenerateField()
+    {
+        // Ensure behavior is properly initialized based on the outlineType
+        switch (outlineType)
+        {
+            case OutlineType.Normal:
+                behavior = new NormalElement(this);
+                break;
+            case OutlineType.Fire:
+                behavior = new FireElement(this);
+                break;
+            case OutlineType.Water:
+                behavior = new WaterElement(this);
+                break;
+            // case OutlineType.Earth:
+            //     behavior = new EarthElement(this);
+            //     break;
+            case OutlineType.Air:
+                behavior = new AirElement(this);
+                break;
+        }
+
+        if (behavior != null) 
+        {
+            // Generate the field if behavior is properly set
+            GenerateField();
+        }
+        else 
+        {
+            Debug.LogError("Behavior is not set correctly!");
+        }
+    }
+    
 
     // Retrieves the flow vector at a given position on the grid.
     // Converts the global position to local grid coordinates and returns the flow vector.
@@ -242,12 +277,12 @@ public class FlowFieldTest : MonoBehaviour
     #region Air Element Code
 
 // Air settings (hidden from Inspector) - uses editor to display
-    [HideInInspector] public float windStrength = 5f; // The intensity of the wind flow (like waveAmplitude)
-    [HideInInspector] public float windFrequency = 0.1f; // How frequently the air swirls (like waveFrequency)
-    [HideInInspector] public float windSpeed = 15f; // Speed at which the wind moves across the field (like waveSpeed)
+    [HideInInspector] public float windStrength = 1f; // The intensity of the wind flow (like waveAmplitude)
+    [HideInInspector] public float windFrequency = 10f; // How frequently the air swirls (like waveFrequency)
+    [HideInInspector] public float windSpeed = 0f; // Speed at which the wind moves across the field (like waveSpeed)
     [HideInInspector] public float airTurbulence = 0f; // Vertical center of the wind flow (like waterLevel)
-    [HideInInspector] public float airBaseWidth = 0f; // Base width of the air flow
-    [HideInInspector] public float airTipWidth = -2f; // Tip width of the air flow
+    [HideInInspector] public float airBaseWidth = 2f; // Base width of the air flow
+    [HideInInspector] public float airTipWidth = -30f; // Tip width of the air flow
     [HideInInspector] public Color airStartColor = Color.white; // Start color for the air element (wind)
     [HideInInspector] public Color airMiddleColor = new Color(0.5f, 0.8f, 1f); // Light blue for gentle wind
     [HideInInspector] public Color airEndColor = Color.gray; // End color for the air element

@@ -70,9 +70,7 @@ public class FlowFieldTest : MonoBehaviour
         // Ensure behavior is properly initialized based on the outlineType
         switch (outlineType)
         {
-            case OutlineType.Normal:
-                behavior = new NormalElement(this);
-                break;
+         
             case OutlineType.Fire:
                 behavior = new FireElement(this);
                 break;
@@ -84,6 +82,9 @@ public class FlowFieldTest : MonoBehaviour
             //     break;
             case OutlineType.Air:
                 behavior = new AirElement(this);
+                break;
+            case OutlineType.Normal:
+                behavior = new NormalElement(this);
                 break;
         }
 
@@ -211,7 +212,7 @@ public class FlowFieldTest : MonoBehaviour
     // Fire settings (hidden from Inspector) - uses editor to display
     [HideInInspector] public float fireScale = 9f;
     [HideInInspector] public float flickerSpeed = 0f;
-    [HideInInspector] public float flickerAmount = 0f;
+    [HideInInspector] public float flickerAmount = .3f;
     [HideInInspector] public float fireBaseWidth = 0f;
     [HideInInspector] public float fireTipWidth = -2f;
     [HideInInspector] public Color startColor = Color.red;

@@ -48,39 +48,36 @@ public class FlowFieldManager : MonoBehaviour
             FlowFieldTest.OutlineType.Water,
             FlowFieldTest.OutlineType.Earth,
             FlowFieldTest.OutlineType.Air,
-            FlowFieldTest.OutlineType.Normal,
         };
 
         int index = 0;
 
         while (true)
         {
-            // Check if normalPulseAmount is at max and switch if so
             if (normalPulseSpeed >= changeAmount)
             {
+                // Move to the next type first, before applying
+                index = (index + 1) % types.Length;
+
                 flowField.outlineType = types[index];
                 flowField.RegenerateField();
 
-                // Debug log to confirm the switch
                 Debug.Log($"Switched to: {types[index]}");
 
-                // Reset the pulse amount
                 normalPulseSpeed = 0f;
 
-                // Move to the next type in the array
-                index = (index + 1) % types.Length;
-
-                // Wait until the next pulse before continuing
                 while (normalPulseSpeed < changeAmount)
                 {
-                    yield return null; // Wait until pulse reaches 10 again
+                    yield return null;
                 }
             }
 
-            // Delay before the next update
             yield return null;
         }
     }
+    
+    
+    
 
 
     void Update()

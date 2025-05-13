@@ -17138,9 +17138,9 @@ MonoBehaviour:
   increment: 0.1
   showFlowField: 1
   outlineType: 0
-  fireScale: 30
+  fireScale: 9
   flickerSpeed: 0
-  flickerAmount: 0
+  flickerAmount: 0.3
   fireBaseWidth: 0
   fireTipWidth: -2
   startColor: {r: 1, g: 0.14576916, b: 0, a: 1}
@@ -17151,6 +17151,7 @@ MonoBehaviour:
   waveSpeed: 15
   waterLevel: 0
   waterStartColor: {r: 0, g: 0.6642294, b: 1, a: 1}
+  waterMiddleColor: {r: 0, g: 0.5, b: 1, a: 1}
   waterEndColor: {r: 0, g: 0, b: 1, a: 1}
   windStrength: 1
   windFrequency: 10
@@ -17159,6 +17160,7 @@ MonoBehaviour:
   airBaseWidth: 2
   airTipWidth: 30
   airStartColor: {r: 1, g: 1, b: 1, a: 1}
+  airMiddleColor: {r: 0.5, g: 0.8, b: 1, a: 1}
   airEndColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
 --- !u!4 &1949151991
 Transform:
@@ -17191,14 +17193,16 @@ MonoBehaviour:
   fieldWidth: 8
   fieldHeight: 8
   particleSystem: {fileID: 1453057408}
+  pulseGrowthSpeed: 0.1
   colourOptions:
   - {r: 0.9528302, g: 0.4179868, b: 0.4179868, a: 1}
   - {r: 0.30907324, g: 0.9245283, b: 0.3009078, a: 1}
   - {r: 0, g: 0.50669, b: 1, a: 1}
   - {r: 1, g: 0.950763, b: 0.3820755, a: 1}
   enableNormalSizePulsing: 1
-  normalPulseAmount: 0.05
-  normalPulseSpeed: 2
+  normalPulseAmount: 0
+  normalPulseSpeed: 0.1
+  changeAmount: 5
 --- !u!1 &1950404718
 GameObject:
   m_ObjectHideFlags: 0

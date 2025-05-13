@@ -158,9 +158,12 @@ public class Particle
     private Vector2 stuckPosition;
     private float randomSeed;
     private float elementZoneAge = 0f;
-    private const float elementZoneLifespan = 100f; // lower value, can reduce clumping
+    private const float elementZoneLifespan = 1f; // lower value, can reduce clumping
     private bool shrinking = false;
     private static HashSet<Vector2> takenElementZonePositions = new HashSet<Vector2>();
+    [Header("Fire Element Vertical Limit")]
+    public bool limitFireHeight = true;
+    public float maxVerticalOffset = 2.5f; // How far upward particles can drift from stuckPosition
 
     private bool CheckElementZone(FlowFieldTest field)
     {
@@ -258,7 +261,15 @@ public class Particle
             Mathf.Cos(Time.time * flickerSpeed + randomSeed) * flickerAmount
         );
 
-        Vector2 upwardDrift = new Vector2(0, elementZoneAge * 0.5f);
+        Vector2 upwardDrift = new Vector2(0, elementZoneAge * 1f);
+
+        // Limit the height if enabled
+        if (limitFireHeight)
+        {
+            float clampedY = Mathf.Min(upwardDrift.y, maxVerticalOffset);
+            upwardDrift.y = clampedY;
+        }
+
         particle.position = stuckPosition + flicker + upwardDrift;
 
         if (elementZoneAge >= elementZoneLifespan)
@@ -266,7 +277,7 @@ public class Particle
 
         if (shrinking)
         {
-            particle.startSize = Mathf.Max(0f, particle.startSize - Time.deltaTime * 0.05f);
+            particle.startSize = Mathf.Max(0f, particle.startSize - Time.deltaTime * .1f);
             if (particle.startSize <= 0.05f)
                 ResetParticleToOriginal();
         }

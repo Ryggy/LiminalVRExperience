@@ -23,6 +23,21 @@ public class FlowField2DVolume : MonoBehaviour
      [FormerlySerializedAs("vectors")] [SerializeField]
     public Vector2[] vectorData;
     
+    // Bounds
+    public enum BoundsType2D
+    {
+        Closed,
+        Border,
+        Repeat,
+        Mirror
+    }
+    
+    public bool perAxisBounds = false;
+    public BoundsType2D bounds = BoundsType2D.Closed;
+    public BoundsType2D boundsX = BoundsType2D.Closed;
+    public BoundsType2D boundsY = BoundsType2D.Closed;
+    [Range(0f, 1f)] public float closedBoundRamp = 0f;
+    
     // Animate
     public bool animateField = false;
     public AnimationCurve animationCurve = new AnimationCurve();
@@ -53,9 +68,6 @@ public class FlowField2DVolume : MonoBehaviour
         {
             Debug.LogWarning("FGA file not found, falling back to procedural generation");
         }
-        
-        //InitBehaviour();
-        //GenerateField();
     }
 
     void Update()
@@ -65,14 +77,6 @@ public class FlowField2DVolume : MonoBehaviour
             zOffset += Time.deltaTime * animationSpeed;
             GenerateField();
         }
-        
-#if UNITY_EDITOR
-        if (activeBehaviour == null || behaviours == null || !behaviours.ContainsKey(fieldType))
-        {
-            //InitBehaviour();
-            //GenerateField();
-        }
-#endif
     }
 
     void InitBehaviour()
@@ -95,11 +99,55 @@ public class FlowField2DVolume : MonoBehaviour
     public Vector2 GetVectorAtWorldPosition(Vector2 worldPos)
     {
         Vector2 local = worldPos - (Vector2)transform.position;
+        Vector2 relative = new Vector2(local.x / (cols * cellSize), local.y / (rows * cellSize));
 
-        int x = Mathf.Clamp(Mathf.FloorToInt(local.x / cellSize), 0, cols - 1);
-        int y = Mathf.Clamp(Mathf.FloorToInt(local.y / cellSize), 0, rows - 1);
+        float borderIntensity = 1f;
 
-        return vectorData[x + y * cols];
+        BoundsType2D bx = perAxisBounds ? boundsX : bounds;
+        BoundsType2D by = perAxisBounds ? boundsY : bounds;
+
+        // Handle X bounds
+        relative.x = ApplyBounds(relative.x, bx, ref borderIntensity);
+        // Handle Y bounds
+        relative.y = ApplyBounds(relative.y, by, ref borderIntensity);
+
+        // Grid lookup
+        int x = Mathf.Clamp(Mathf.FloorToInt(relative.x * cols), 0, cols - 1);
+        int y = Mathf.Clamp(Mathf.FloorToInt(relative.y * rows), 0, rows - 1);
+
+        int index = x + y * cols;
+        return vectorData[index] * borderIntensity * borderIntensity;
+    }
+    
+    private float ApplyBounds(float rel, BoundsType2D mode, ref float borderIntensity)
+    {
+        switch (mode)
+        {
+            case BoundsType2D.Closed:
+                if (rel < 0f || rel > 1f)
+                    return 0f;
+                if (closedBoundRamp > 0f)
+                {
+                    float t = Mathf.Min(rel, 1f - rel) / closedBoundRamp;
+                    borderIntensity *= Mathf.Clamp01(t);
+                }
+                return rel;
+
+            case BoundsType2D.Border:
+                return Mathf.Clamp01(rel);
+
+            case BoundsType2D.Repeat:
+                return rel - Mathf.Floor(rel);
+
+            case BoundsType2D.Mirror:
+                rel = (rel * 0.5f - Mathf.Floor(rel * 0.5f)) * 2.0f;
+                if (rel > 1.0f)
+                    rel = 2f - rel;
+                return rel;
+
+            default:
+                return rel;
+        }
     }
 
     public void ReadFGA(string path)

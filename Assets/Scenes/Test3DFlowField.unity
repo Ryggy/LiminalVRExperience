@@ -243,10 +243,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ceca548e0415f424abb0b55cf5fbccbd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  field: {fileID: 698846849}
-  tightness: 1
-  minInfluence: 0.01
-  multiplier: 1
+  Tightness: 0.5
+  MinInfluence: 0.05
+  Multiplier: 1
+  AffectedByAllFF: 0
+  FFRestrictedList:
+  - field: {fileID: 698846849}
+    weight: 1
+  - field: {fileID: 863476766}
+    weight: 1
+  AnimateTightness: 0
+  TightnessOverTime:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  AnimateMultiplier: 0
+  MultiplierOverTime:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!199 &226052721
 ParticleSystemRenderer:
   serializedVersion: 6
@@ -4974,12 +4993,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 226052719}
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 698846850}
-  m_RootOrder: 0
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!114 &226052724
 MonoBehaviour:
@@ -5315,6 +5334,11 @@ MonoBehaviour:
   - {x: 0.52959, y: -0.767586}
   - {x: 0.570368, y: -0.821307}
   - {x: 0.248332, y: -0.953948}
+  perAxisBounds: 0
+  bounds: 0
+  boundsX: 0
+  boundsY: 0
+  closedBoundRamp: 0
   animateField: 0
   animationCurve:
     serializedVersion: 2
@@ -5371,12 +5395,58 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 698846848}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.57, y: -0.99, z: 0.53}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 226052723}
+  m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &777226219
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 777226221}
+  - component: {fileID: 777226220}
+  m_Layer: 0
+  m_Name: Sequencer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &777226220
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 777226219}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e79c31ed6953a14418f6458fe24cbc3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sequence: {fileID: 11400000, guid: 5495375a2fccf93418125ee3c858cf42, type: 2}
+  field: {fileID: 698846849}
+  controller: {fileID: 226052720}
+  emitter: {fileID: 226052724}
+--- !u!4 &777226221
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 777226219}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -5.3532543, y: -0.27689612, z: -31.292389}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &849962325
 GameObject:
@@ -5473,6 +5543,210 @@ Transform:
   - {fileID: 1008101104}
   m_Father: {fileID: 0}
   m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &863476765
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 863476767}
+  - component: {fileID: 863476766}
+  m_Layer: 0
+  m_Name: 2DFlowField (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &863476766
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 863476765}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7642bb420713de41a1a4c43d85ac569, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  loadFromFile: 1
+  fgaPath: E:/LiminalVRExperience/Assets\Scripts\FlowField\3D\VF_Coil.fga
+  importVectorScale: 1
+  cols: 10
+  rows: 10
+  cellSize: 0.1
+  increment: 0.1
+  vectorData:
+  - {x: -0.042887, y: -0.042887}
+  - {x: -0.046349, y: -0.059592}
+  - {x: -0.043436, y: -0.078186}
+  - {x: -0.03164, y: -0.09492}
+  - {x: -0.011667, y: -0.105005}
+  - {x: 0.011668, y: -0.105005}
+  - {x: 0.031641, y: -0.09492}
+  - {x: 0.043437, y: -0.078186}
+  - {x: 0.04635, y: -0.059592}
+  - {x: 0.042887, y: -0.042887}
+  - {x: -0.059591, y: -0.046349}
+  - {x: -0.066915, y: -0.066915}
+  - {x: -0.064705, y: -0.090587}
+  - {x: -0.048132, y: -0.112309}
+  - {x: -0.017927, y: -0.125495}
+  - {x: 0.017929, y: -0.125495}
+  - {x: 0.048133, y: -0.112309}
+  - {x: 0.064706, y: -0.090587}
+  - {x: 0.066916, y: -0.066915}
+  - {x: 0.059592, y: -0.046349}
+  - {x: -0.078185, y: -0.043436}
+  - {x: -0.090587, y: -0.064705}
+  - {x: -0.089639, y: -0.089639}
+  - {x: -0.067532, y: -0.112555}
+  - {x: -0.02527, y: -0.126354}
+  - {x: 0.025272, y: -0.126354}
+  - {x: 0.067534, y: -0.112555}
+  - {x: 0.08964, y: -0.089639}
+  - {x: 0.090588, y: -0.064705}
+  - {x: 0.078187, y: -0.043436}
+  - {x: -0.09492, y: -0.03164}
+  - {x: -0.112309, y: -0.048132}
+  - {x: -0.112554, y: -0.067533}
+  - {x: -0.085128, y: -0.085129}
+  - {x: -0.031839, y: -0.09552}
+  - {x: 0.031841, y: -0.09552}
+  - {x: 0.08513, y: -0.085129}
+  - {x: 0.112556, y: -0.067533}
+  - {x: 0.11231, y: -0.048132}
+  - {x: 0.094921, y: -0.03164}
+  - {x: -0.105004, y: -0.011667}
+  - {x: -0.125495, y: -0.017928}
+  - {x: -0.126353, y: -0.025271}
+  - {x: -0.09552, y: -0.03184}
+  - {x: -0.035655, y: -0.035656}
+  - {x: 0.035658, y: -0.035656}
+  - {x: 0.095522, y: -0.03184}
+  - {x: 0.126355, y: -0.02527}
+  - {x: 0.125497, y: -0.017928}
+  - {x: 0.105006, y: -0.011667}
+  - {x: -0.105004, y: 0.011667}
+  - {x: -0.125495, y: 0.017928}
+  - {x: -0.126353, y: 0.025271}
+  - {x: -0.09552, y: 0.03184}
+  - {x: -0.035655, y: 0.035657}
+  - {x: 0.035658, y: 0.035657}
+  - {x: 0.095522, y: 0.031841}
+  - {x: 0.126356, y: 0.025271}
+  - {x: 0.125497, y: 0.017928}
+  - {x: 0.105006, y: 0.011667}
+  - {x: -0.09492, y: 0.03164}
+  - {x: -0.112309, y: 0.048133}
+  - {x: -0.112554, y: 0.067533}
+  - {x: -0.085128, y: 0.085129}
+  - {x: -0.031839, y: 0.095521}
+  - {x: 0.031842, y: 0.095521}
+  - {x: 0.08513, y: 0.085129}
+  - {x: 0.112556, y: 0.067533}
+  - {x: 0.112311, y: 0.048133}
+  - {x: 0.094922, y: 0.03164}
+  - {x: -0.078185, y: 0.043437}
+  - {x: -0.090587, y: 0.064705}
+  - {x: -0.089639, y: 0.08964}
+  - {x: -0.067532, y: 0.112555}
+  - {x: -0.02527, y: 0.126354}
+  - {x: 0.025272, y: 0.126354}
+  - {x: 0.067534, y: 0.112555}
+  - {x: 0.089641, y: 0.08964}
+  - {x: 0.090589, y: 0.064706}
+  - {x: 0.078187, y: 0.043437}
+  - {x: -0.059591, y: 0.046349}
+  - {x: -0.066915, y: 0.066915}
+  - {x: -0.064705, y: 0.090587}
+  - {x: -0.048132, y: 0.112309}
+  - {x: -0.017927, y: 0.125495}
+  - {x: 0.017929, y: 0.125495}
+  - {x: 0.048133, y: 0.112309}
+  - {x: 0.064706, y: 0.090588}
+  - {x: 0.066916, y: 0.066915}
+  - {x: 0.059593, y: 0.046349}
+  - {x: -0.042887, y: 0.042887}
+  - {x: -0.046349, y: 0.059592}
+  - {x: -0.043436, y: 0.078186}
+  - {x: -0.03164, y: 0.09492}
+  - {x: -0.011667, y: 0.105005}
+  - {x: 0.011668, y: 0.105005}
+  - {x: 0.031641, y: 0.09492}
+  - {x: 0.043437, y: 0.078186}
+  - {x: 0.04635, y: 0.059592}
+  - {x: 0.042887, y: 0.042887}
+  perAxisBounds: 0
+  bounds: 0
+  boundsX: 0
+  boundsY: 0
+  closedBoundRamp: 0
+  animateField: 0
+  animationCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1.0018616
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.49676022
+      value: 1.0018616
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.61785203
+      value: 1.4110141
+      inSlope: 2.6345253
+      outSlope: 2.6345253
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1.1502715
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  animationSpeed: 1
+  showGizmos: 1
+  vectorColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  gizmoScale: 1
+  fieldType: 0
+--- !u!4 &863476767
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 863476765}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -3.01, y: -0.621, z: 0.53}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &940102173
 GameObject:

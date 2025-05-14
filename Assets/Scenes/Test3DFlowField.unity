@@ -5074,7 +5074,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 226052719}
   m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0.438, y: 0.501, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 863476767}
@@ -5146,6 +5146,56 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &501513600
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 501513602}
+  - component: {fileID: 501513601}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!320 &501513601
+PlayableDirector:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 501513600}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_PlayableAsset: {fileID: 11400000, guid: 45ab11ddfac6e49478bc4ae4b08d1031, type: 2}
+  m_InitialState: 1
+  m_WrapMode: 2
+  m_DirectorUpdateMode: 1
+  m_InitialTime: 0
+  m_SceneBindings:
+  - key: {fileID: 7745224356986167735, guid: 45ab11ddfac6e49478bc4ae4b08d1031, type: 2}
+    value: {fileID: 1012380197}
+  m_ExposedReferences:
+    m_References: []
+--- !u!4 &501513602
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 501513600}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 6.5389304, y: -2.9348574, z: 48.939945}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &588790334
 GameObject:
@@ -5361,9 +5411,9 @@ MonoBehaviour:
   loadFromFile: 1
   fgaPath: E:/LiminalVRExperience/Assets\Scripts\FlowField\3D\VF_HelixConcentrateRND.fga
   importVectorScale: 1
-  cols: 10
-  rows: 10
-  cellSize: 0.1
+  cols: 60
+  rows: 40
+  cellSize: 10
   increment: 0.1
   vectorData:
   - {x: -0.490617, y: 0.86705}
@@ -5498,7 +5548,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   animationSpeed: 1
   showGizmos: 1
-  vectorColor: {r: 0.7969931, g: 0.015686274, b: 1, a: 1}
+  vectorColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   gizmoScale: 1
   fieldType: 0
 --- !u!4 &698846850
@@ -5646,7 +5696,7 @@ MonoBehaviour:
   importVectorScale: 1
   cols: 10
   rows: 10
-  cellSize: 0.1
+  cellSize: 0.3
   increment: 0.1
   vectorData:
   - {x: -0.042887, y: -0.042887}
@@ -5753,47 +5803,29 @@ MonoBehaviour:
   bounds: 0
   boundsX: 0
   boundsY: 0
-  closedBoundRamp: 0
+  closedBoundRamp: 0.246
   animateField: 0
   animationCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 1.0018616
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.49676022
-      value: 1.0018616
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.61785203
-      value: 1.4110141
-      inSlope: 2.6345253
-      outSlope: 2.6345253
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
+      inWeight: 0
+      outWeight: 0
     - serializedVersion: 3
       time: 1
-      value: 1.1502715
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
+      inWeight: 0
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
@@ -12079,8 +12111,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flowFieldSource: {fileID: 698846849}
-  emissionType: 1
-  coverage: 0.19
+  emissionType: 0
+  coverage: 1
 --- !u!199 &2083902404
 ParticleSystemRenderer:
   serializedVersion: 6

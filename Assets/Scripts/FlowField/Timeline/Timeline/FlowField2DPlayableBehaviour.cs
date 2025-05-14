@@ -81,11 +81,11 @@ public class FlowField2DPlayableBehaviour : PlayableBehaviour
             field.showGizmos = showGizmos;
             field.gizmoScale = gizmoScale;
 
-            int newHash = sequencer.field.GetFieldConfigHash();
-            if (oldHash != newHash)
-            {
-                sequencer.field.GenerateField();
-            }
+            // int newHash = sequencer.field.GetFieldConfigHash();
+            // if (oldHash != newHash)
+            // {
+            //     sequencer.field.GenerateField();
+            // }
         }
 
         // -----------------------------

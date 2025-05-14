@@ -37,7 +37,7 @@ public class FlowField2DVolume : MonoBehaviour
     public BoundsType2D boundsX = BoundsType2D.Closed;
     public BoundsType2D boundsY = BoundsType2D.Closed;
     [Range(0f, 1f)] public float closedBoundRamp = 0f;
-    
+   
     // Animate
     public bool animateField = false;
     public AnimationCurve animationCurve = new AnimationCurve();
@@ -214,6 +214,20 @@ public class FlowField2DVolume : MonoBehaviour
 
             Vector3 pos = new Vector3(x * cellSize, y * cellSize, 0) + transform.position;
             Gizmos.DrawRay(pos, (Vector3)dir.normalized * cellSize * gizmoScale);
+        }
+    }
+    
+    public int GetFieldConfigHash()
+    {
+        unchecked
+        {
+            int hash = 17;
+            hash = hash * 31 + cols.GetHashCode();
+            hash = hash * 31 + rows.GetHashCode();
+            hash = hash * 31 + cellSize.GetHashCode();
+            hash = hash * 31 + increment.GetHashCode();
+            hash = hash * 31 + fieldType.GetHashCode();
+            return hash;
         }
     }
 }

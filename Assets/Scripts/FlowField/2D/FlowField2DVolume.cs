@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.Serialization;
+
 
 [ExecuteInEditMode]
 [AddComponentMenu("Vector Field/2D Flow Field Volume")]
@@ -10,7 +13,8 @@ public class FlowField2DVolume : MonoBehaviour
    // IO
     public bool loadFromFile = true;
     [HideInInspector]
-    public string fgaPath;
+    [FormerlySerializedAs("fgaPath")]
+    public string fgaFileName;
     [FormerlySerializedAs("globalScale")] public float importVectorScale = 0.01f;
     
     // Grid
@@ -60,13 +64,14 @@ public class FlowField2DVolume : MonoBehaviour
     {
         vectorData = new Vector2[cols * rows];
 
-        if (loadFromFile && !string.IsNullOrEmpty(fgaPath))
+        if (loadFromFile && !string.IsNullOrEmpty(fgaFileName))
         {
-            ReadFGA(fgaPath);
+            Debug.Log("Trying to load FGA file: " + fgaFileName);
+            StartCoroutine(LoadFGA(fgaFileName));
         }
         else
         {
-            Debug.LogWarning("FGA file not found, falling back to procedural generation");
+            Debug.LogWarning("FGA file not found or not assigned, falling back to procedural generation");
         }
     }
 
@@ -149,54 +154,71 @@ public class FlowField2DVolume : MonoBehaviour
                 return rel;
         }
     }
-
-    public void ReadFGA(string path)
+    
+    public void ReadFGA(string filename)
     {
-        if (!File.Exists(path))
+        StartCoroutine(LoadFGA(filename));
+    }
+
+   private IEnumerator LoadFGA(string filename)
+    {
+        string path = Path.Combine(Application.streamingAssetsPath, filename);
+
+        UnityWebRequest www = UnityWebRequest.Get(path);
+        yield return www.SendWebRequest();
+
+    #if UNITY_2020_1_OR_NEWER
+        if (www.result != UnityWebRequest.Result.Success)
+    #else
+        if (www.isNetworkError || www.isHttpError)
+    #endif
         {
-            Debug.LogError("FGA file not found: " + path);
-            return;
+            Debug.LogError("Failed to load FGA file: " + path + "\n" + www.error);
+            yield break;
         }
 
-        using (StreamReader reader = new StreamReader(path))
+        string[] lines = www.downloadHandler.text.Split('\n');
+        if (lines.Length < 4)
         {
-            var size = reader.ReadLine()?.Split(',');
-            
-            int xSize = (int)float.Parse(size[0].Trim(), System.Globalization.CultureInfo.InvariantCulture);
-            int ySize = (int)float.Parse(size[1].Trim(), System.Globalization.CultureInfo.InvariantCulture);
-            int zSize = (int)float.Parse(size[2].Trim(), System.Globalization.CultureInfo.InvariantCulture);
+            Debug.LogError("FGA file is malformed or empty: " + filename);
+            yield break;
+        }
 
-            if (zSize != 1)
-                Debug.LogWarning("FGA has Z > 1, only Z=1 is used for 2D slice");
+        var size = lines[0].Split(',');
+        int xSize = (int)float.Parse(size[0].Trim(), System.Globalization.CultureInfo.InvariantCulture);
+        int ySize = (int)float.Parse(size[1].Trim(), System.Globalization.CultureInfo.InvariantCulture);
+        int zSize = (int)float.Parse(size[2].Trim(), System.Globalization.CultureInfo.InvariantCulture);
 
-            cols = xSize;
-            rows = ySize;
-            vectorData = new Vector2[cols * rows];
+        if (zSize != 1)
+            Debug.LogWarning("FGA has Z > 1, only Z=1 is used for 2D slice");
 
-            reader.ReadLine(); // skip min
-            reader.ReadLine(); // skip max
+        cols = xSize;
+        rows = ySize;
+        vectorData = new Vector2[cols * rows];
 
-            for (int z = 0; z < zSize; z++)
+        int lineIndex = 3; // skip size, min, max
+        for (int z = 0; z < zSize; z++)
+        {
+            for (int y = 0; y < rows; y++)
             {
-                for (int y = 0; y < rows; y++)
+                for (int x = 0; x < cols; x++)
                 {
-                    for (int x = 0; x < cols; x++)
-                    {
-                        var parts = reader.ReadLine()?.Split(',');
-                        Vector3 rawVec = new Vector3(
-                            float.Parse(parts[0]) * importVectorScale,
-                            float.Parse(parts[1]) * importVectorScale,
-                            float.Parse(parts[2]) * importVectorScale
-                        );
+                    if (lineIndex >= lines.Length) break;
 
-                        // Ignore Z component for 2D flow
-                        int index = x + y * cols;
-                        vectorData[index] = new Vector2(rawVec.x, rawVec.y);
-                    }
+                    var parts = lines[lineIndex++].Split(',');
+                    Vector3 rawVec = new Vector3(
+                        float.Parse(parts[0]) * importVectorScale,
+                        float.Parse(parts[1]) * importVectorScale,
+                        float.Parse(parts[2]) * importVectorScale
+                    );
+
+                    int index = x + y * cols;
+                    vectorData[index] = new Vector2(rawVec.x, rawVec.y);
                 }
             }
-            reader.Close();
         }
+
+        Debug.Log("FGA successfully loaded via UnityWebRequest: " + filename + $" ({cols}x{rows}) Sample[0]: {vectorData[0]}");
     }
     
     void OnDrawGizmos()

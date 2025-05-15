@@ -43,12 +43,24 @@ public class FlowField2DParticleController : MonoBehaviour
     
     void LateUpdate()
     {
+        if (ps == null)
+        {
+            Debug.LogError("Particle system not assigned!");
+            return;
+        }
+        
         int maxParticles = ps.main.maxParticles;
         if (particles == null || particles.Length != maxParticles)
             particles = new ParticleSystem.Particle[maxParticles];
 
         int alive = ps.GetParticles(particles);
-
+        
+        if (alive == 0)
+        {
+            Debug.Log("No particles alive.");
+            return;
+        }
+        
         for (int i = 0; i < alive; i++)
         {
             Vector3 worldPos = particles[i].position;

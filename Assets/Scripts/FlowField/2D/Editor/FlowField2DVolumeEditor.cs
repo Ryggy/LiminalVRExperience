@@ -15,7 +15,7 @@ public class FlowField2DVolumeEditor : Editor
         var flow = (FlowField2DVolume)target;
         for (int i = 0; i < fileOptions.Length; i++)
         {
-            if (fileOptions[i] == Path.GetFileNameWithoutExtension(flow.fgaPath))
+            if (fileOptions[i] == Path.GetFileNameWithoutExtension(flow.fgaFileName))
                 selectedIndex = i;
         }
     }
@@ -37,9 +37,18 @@ public class FlowField2DVolumeEditor : Editor
 
         if (GUILayout.Button("Reload FGA"))
         {
+            if (fileOptions == null || fileOptions.Length == 0 || selectedIndex >= fileOptions.Length)
+            {
+                Debug.LogWarning("No FGA files available or invalid index");
+                return;
+            }
             string filename = fileOptions[selectedIndex];
-            flow.fgaPath = FindFGAPathByName(filename);
-            flow.ReadFGA(flow.fgaPath);
+
+            if (filename != null)
+            {
+                flow.fgaFileName = filename + ".fga";
+                flow.ReadFGA(flow.fgaFileName);
+            }
         }
 
         GUILayout.Space(10);
@@ -58,16 +67,5 @@ public class FlowField2DVolumeEditor : Editor
         {
             fileOptions[i + 1] = Path.GetFileNameWithoutExtension(paths[i]);
         }
-    }
-
-    string FindFGAPathByName(string filename)
-    {
-        string[] paths = Directory.GetFiles(Application.dataPath, "*.fga", SearchOption.AllDirectories);
-        foreach (var full in paths)
-        {
-            if (Path.GetFileNameWithoutExtension(full) == filename)
-                return full;
-        }
-        return null;
     }
 }

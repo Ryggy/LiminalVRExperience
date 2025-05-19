@@ -276,12 +276,12 @@ public class FlowFieldTest : MonoBehaviour
     #region Air Element Code
 
 // Air settings (hidden from Inspector) - uses editor to display
-    [HideInInspector] public float windStrength = 0.7f; // The intensity of the wind flow (like waveAmplitude)
-    [HideInInspector] public float windFrequency = 12f; // How frequently the air swirls (like waveFrequency)
-    [HideInInspector] public float windSpeed = -0.8f; // Speed at which the wind moves across the field (like waveSpeed)
-    [HideInInspector] public float airTurbulence = 13f; // Vertical center of the wind flow (like waterLevel)
-    [HideInInspector] public float airBaseWidth = -9f; // Base width of the air flow
-    [HideInInspector] public float airTipWidth = 15f; // Tip width of the air flow
+    [HideInInspector] public float windStrength = 1f; // The intensity of the wind flow (like waveAmplitude)
+    [HideInInspector] public float windFrequency = 1f; // How frequently the air swirls (like waveFrequency)
+    [HideInInspector] public float windSpeed = 1f; // Speed at which the wind moves across the field (like waveSpeed)
+    [HideInInspector] public float airTurbulence = 1f; // Vertical center of the wind flow (like waterLevel)
+    [HideInInspector] public float airBaseWidth = 1f; // Base width of the air flow
+    [HideInInspector] public float airTipWidth = 1f; // Tip width of the air flow
     [HideInInspector] public Color airStartColor = Color.white; // Start color for the air element (wind)
     [HideInInspector] public Color airMiddleColor = new Color(0.5f, 0.8f, 1f); // Light blue for gentle wind
     [HideInInspector] public Color airEndColor = Color.gray; // End color for the air element

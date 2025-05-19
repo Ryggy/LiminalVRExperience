@@ -12,6 +12,7 @@ public class FlowFieldManager : MonoBehaviour
     public ParticleSystem particleSystem;
     private List<Particle> particles;
     private ParticleSystem.Particle[] particleArray;
+    public int spawnedParticleCount = 1000;
 
     public float pulseGrowthSpeed = 0.1f;
     // timer
@@ -67,6 +68,11 @@ public class FlowFieldManager : MonoBehaviour
                 Debug.Log($"Switched to: {types[index]}");
 
                 normalPulseSpeed = 0f;
+                
+                // Spawn more particles
+                SpawnExtraParticles(spawnedParticleCount); // ← Add 100 new particles (adjust as needed)
+                
+                
 
                 while (normalPulseSpeed < changeAmount)
                 {
@@ -84,8 +90,12 @@ public class FlowFieldManager : MonoBehaviour
 
     void Update()
     {
-        // Update particle positions and behavior
-        for (int i = 0; i < particles.Count; i++)
+        int count = particles.Count;
+
+        if (particleArray.Length < count)
+            particleArray = new ParticleSystem.Particle[count];
+
+        for (int i = 0; i < count; i++)
         {
             particles[i].Follow(flowField);
             particles[i].Update(flowField);
@@ -93,8 +103,8 @@ public class FlowFieldManager : MonoBehaviour
             particleArray[i] = particles[i].GetParticle();
         }
 
-        particleSystem.SetParticles(particleArray, particleArray.Length);
-
+        particleSystem.SetParticles(particleArray, count);
+        
         // Simulate pulsing effect for Normal mode
         if (enableNormalSizePulsing)
         {
@@ -107,14 +117,21 @@ public class FlowFieldManager : MonoBehaviour
                 normalPulseSpeed = changeAmount;
             }
         }
+        
+        
+        
+        
+        
+        
+        
         normalPulseAmount = Mathf.MoveTowards(normalPulseAmount, targetPulseAmount, pulseLerpSpeed * Time.deltaTime);
     }
     private IEnumerator RandomizePulseAmount()
     {
         while (true)
         {
-            targetPulseAmount = Random.Range(0.05f, 0.25f); // smaller range for smoother pulsing
-            yield return new WaitForSeconds(Random.Range(1f, 3f));
+            targetPulseAmount = Random.Range(0.1f, 0.4f); // smaller range for smoother pulsing
+            yield return new WaitForSeconds(Random.Range(1f, 2f));
         }
     }
 
@@ -144,4 +161,27 @@ public class FlowFieldManager : MonoBehaviour
             Gizmos.DrawWireCube(center, size);
         }
     }
+    
+    private void SpawnExtraParticles(int amount)
+    {
+        int newTotal = particles.Count + amount;
+        if (newTotal > particleArray.Length)
+        {
+            // Expand particleArray if necessary
+            particleArray = new ParticleSystem.Particle[newTotal];
+        }
+
+        for (int i = 0; i < amount; i++)
+        {
+            Vector2 startPos = new Vector2(Random.Range(0, fieldWidth), Random.Range(0, fieldHeight)) +
+                               (Vector2)transform.position;
+            particles.Add(new Particle(this, flowField, startPos, 0.005f));
+        }
+
+        Debug.Log($"Spawned {amount} new particles. Total: {particles.Count}");
+    }
+    
+    
+    
+    
 }

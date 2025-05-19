@@ -17153,12 +17153,12 @@ MonoBehaviour:
   waterStartColor: {r: 0, g: 0.6642294, b: 1, a: 1}
   waterMiddleColor: {r: 0, g: 0.5, b: 1, a: 1}
   waterEndColor: {r: 0, g: 0, b: 1, a: 1}
-  windStrength: 0.7
-  windFrequency: 12
-  windSpeed: -0.1
-  airTurbulence: 13
-  airBaseWidth: -9
-  airTipWidth: 16
+  windStrength: 1
+  windFrequency: 1
+  windSpeed: 1
+  airTurbulence: 1
+  airBaseWidth: 1
+  airTipWidth: 1
   airStartColor: {r: 1, g: 1, b: 1, a: 1}
   airMiddleColor: {r: 0.5, g: 0.8, b: 1, a: 1}
   airEndColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
@@ -17193,6 +17193,7 @@ MonoBehaviour:
   fieldWidth: 8
   fieldHeight: 8
   particleSystem: {fileID: 1453057408}
+  spawnedParticleCount: 1000
   pulseGrowthSpeed: 0.1
   colourOptions:
   - {r: 0.9528302, g: 0.4179868, b: 0.4179868, a: 1}
@@ -17203,7 +17204,7 @@ MonoBehaviour:
   normalPulseAmount: 0
   normalPulseSpeed: 0.1
   changeAmount: 2
-  pulseLerpSpeed: 0.2
+  pulseLerpSpeed: 0.5
 --- !u!1 &1950404718
 GameObject:
   m_ObjectHideFlags: 0

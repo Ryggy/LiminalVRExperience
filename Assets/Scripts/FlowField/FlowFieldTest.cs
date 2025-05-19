@@ -26,7 +26,6 @@ public class FlowFieldTest : MonoBehaviour
         Normal,
         Fire,
         Water,
-        Earth,
         Air
     }
 
@@ -44,7 +43,6 @@ public class FlowFieldTest : MonoBehaviour
             { OutlineType.Normal, new NormalElement(this) },
             { OutlineType.Fire, new FireElement(this) },
             { OutlineType.Water, new WaterElement(this) },
-            // { OutlineType.Earth, new EarthElement(this) },  
             { OutlineType.Air, new AirElement(this) }       
         };
     }
@@ -250,7 +248,7 @@ public class FlowFieldTest : MonoBehaviour
     #region Water Element Code
 
     // Water settings (hidden from Inspector) - uses editor to display
-    [HideInInspector] public float waveAmplitude = 90f;
+    [HideInInspector] public float waveAmplitude = 13f;
     [HideInInspector] public float waveFrequency = 0.1f;
     [HideInInspector] public float waveSpeed = 15f;
     [HideInInspector] public float waterLevel = 0f; // vertical center of the wave
@@ -278,12 +276,12 @@ public class FlowFieldTest : MonoBehaviour
     #region Air Element Code
 
 // Air settings (hidden from Inspector) - uses editor to display
-    [HideInInspector] public float windStrength = 1f; // The intensity of the wind flow (like waveAmplitude)
-    [HideInInspector] public float windFrequency = 10f; // How frequently the air swirls (like waveFrequency)
-    [HideInInspector] public float windSpeed = 0f; // Speed at which the wind moves across the field (like waveSpeed)
-    [HideInInspector] public float airTurbulence = 0f; // Vertical center of the wind flow (like waterLevel)
-    [HideInInspector] public float airBaseWidth = 2f; // Base width of the air flow
-    [HideInInspector] public float airTipWidth = -30f; // Tip width of the air flow
+    [HideInInspector] public float windStrength = 0.7f; // The intensity of the wind flow (like waveAmplitude)
+    [HideInInspector] public float windFrequency = 12f; // How frequently the air swirls (like waveFrequency)
+    [HideInInspector] public float windSpeed = -0.8f; // Speed at which the wind moves across the field (like waveSpeed)
+    [HideInInspector] public float airTurbulence = 13f; // Vertical center of the wind flow (like waterLevel)
+    [HideInInspector] public float airBaseWidth = -9f; // Base width of the air flow
+    [HideInInspector] public float airTipWidth = 15f; // Tip width of the air flow
     [HideInInspector] public Color airStartColor = Color.white; // Start color for the air element (wind)
     [HideInInspector] public Color airMiddleColor = new Color(0.5f, 0.8f, 1f); // Light blue for gentle wind
     [HideInInspector] public Color airEndColor = Color.gray; // End color for the air element

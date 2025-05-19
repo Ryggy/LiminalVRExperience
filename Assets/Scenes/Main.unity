@@ -4104,6 +4104,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1673971306}
     m_Modifications:
+    - target: {fileID: 2242737011425782904, guid: d3533d610cccdf8438fcb5da8ca2fbda,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: 2242737011425782904, guid: d3533d610cccdf8438fcb5da8ca2fbda,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1284144462839201941, guid: d3533d610cccdf8438fcb5da8ca2fbda,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0
+      objectReference: {fileID: 0}
     - target: {fileID: 3336476392219939944, guid: d3533d610cccdf8438fcb5da8ca2fbda,
         type: 3}
       propertyPath: m_Name
@@ -4184,21 +4199,6 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 5
       objectReference: {fileID: 0}
-    - target: {fileID: 1284144462839201941, guid: d3533d610cccdf8438fcb5da8ca2fbda,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2242737011425782904, guid: d3533d610cccdf8438fcb5da8ca2fbda,
-        type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 4294967295
-      objectReference: {fileID: 0}
-    - target: {fileID: 2242737011425782904, guid: d3533d610cccdf8438fcb5da8ca2fbda,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 7969211416523390512, guid: d3533d610cccdf8438fcb5da8ca2fbda,
         type: 3}
       propertyPath: m_StaticEditorFlags
@@ -4219,6 +4219,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1673971306}
     m_Modifications:
+    - target: {fileID: 2242737011425782904, guid: d3533d610cccdf8438fcb5da8ca2fbda,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: 1284144462839201941, guid: d3533d610cccdf8438fcb5da8ca2fbda,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0
+      objectReference: {fileID: 0}
     - target: {fileID: 3336476392219939944, guid: d3533d610cccdf8438fcb5da8ca2fbda,
         type: 3}
       propertyPath: m_Name
@@ -4303,16 +4313,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.z
       value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1284144462839201941, guid: d3533d610cccdf8438fcb5da8ca2fbda,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2242737011425782904, guid: d3533d610cccdf8438fcb5da8ca2fbda,
-        type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 4294967295
       objectReference: {fileID: 0}
     - target: {fileID: 7969211416523390512, guid: d3533d610cccdf8438fcb5da8ca2fbda,
         type: 3}
@@ -17146,19 +17146,19 @@ MonoBehaviour:
   startColor: {r: 1, g: 0.14576916, b: 0, a: 1}
   middleColor: {r: 1, g: 0.647, b: 0, a: 1}
   endColor: {r: 1, g: 0.5013487, b: 0, a: 1}
-  waveAmplitude: 90
+  waveAmplitude: 13
   waveFrequency: 0.1
   waveSpeed: 15
   waterLevel: 0
   waterStartColor: {r: 0, g: 0.6642294, b: 1, a: 1}
   waterMiddleColor: {r: 0, g: 0.5, b: 1, a: 1}
   waterEndColor: {r: 0, g: 0, b: 1, a: 1}
-  windStrength: 1
-  windFrequency: 10
-  windSpeed: 0
-  airTurbulence: 0
-  airBaseWidth: 2
-  airTipWidth: 30
+  windStrength: 0.7
+  windFrequency: 12
+  windSpeed: -0.1
+  airTurbulence: 13
+  airBaseWidth: -9
+  airTipWidth: 16
   airStartColor: {r: 1, g: 1, b: 1, a: 1}
   airMiddleColor: {r: 0.5, g: 0.8, b: 1, a: 1}
   airEndColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
@@ -17202,7 +17202,8 @@ MonoBehaviour:
   enableNormalSizePulsing: 1
   normalPulseAmount: 0
   normalPulseSpeed: 0.1
-  changeAmount: 5
+  changeAmount: 2
+  pulseLerpSpeed: 0.2
 --- !u!1 &1950404718
 GameObject:
   m_ObjectHideFlags: 0

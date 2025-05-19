@@ -37,6 +37,9 @@ public class FlowFieldManager : MonoBehaviour
 
         Debug.Log("Starting element cycle coroutine.");
         StartCoroutine(CycleOutlineTypes());
+        
+        // Start randomizing pulse amount
+        StartCoroutine(RandomizePulseAmount());
     }
 
     private IEnumerator CycleOutlineTypes()
@@ -46,7 +49,6 @@ public class FlowFieldManager : MonoBehaviour
             FlowFieldTest.OutlineType.Normal,
             FlowFieldTest.OutlineType.Fire,
             FlowFieldTest.OutlineType.Water,
-            FlowFieldTest.OutlineType.Earth,
             FlowFieldTest.OutlineType.Air,
         };
 
@@ -105,8 +107,16 @@ public class FlowFieldManager : MonoBehaviour
                 normalPulseSpeed = changeAmount;
             }
         }
+        normalPulseAmount = Mathf.MoveTowards(normalPulseAmount, targetPulseAmount, pulseLerpSpeed * Time.deltaTime);
     }
-
+    private IEnumerator RandomizePulseAmount()
+    {
+        while (true)
+        {
+            targetPulseAmount = Random.Range(0.05f, 0.25f); // smaller range for smoother pulsing
+            yield return new WaitForSeconds(Random.Range(1f, 3f));
+        }
+    }
 
     // pusling effect stuff
     [Header("Normal Mode Particle Animation")]
@@ -114,7 +124,9 @@ public class FlowFieldManager : MonoBehaviour
 
     [Range(0f, 1f)] public float normalPulseAmount = 0.1f;
     [Range(0.1f, 5f)] public float normalPulseSpeed = 0f;
-    public float changeAmount = 5f;
+    public float changeAmount = 2f;
+    private float targetPulseAmount = 0.1f;
+    public float pulseLerpSpeed = 0.2f; // Adjust this to make transitions faster or slower
 
     private void OnDrawGizmosSelected()
     {

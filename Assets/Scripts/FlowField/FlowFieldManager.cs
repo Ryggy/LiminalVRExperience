@@ -130,8 +130,8 @@ public class FlowFieldManager : MonoBehaviour
     {
         while (true)
         {
-            targetPulseAmount = Random.Range(0.1f, 0.4f); // smaller range for smoother pulsing
-            yield return new WaitForSeconds(Random.Range(1f, 2f));
+            targetPulseAmount = Random.Range(0.05f, 0.25f); // smaller range for smoother pulsing
+            yield return new WaitForSeconds(Random.Range(1f, 4f));
         }
     }
 

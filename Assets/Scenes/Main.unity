@@ -5334,8 +5334,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flowField: {fileID: 1949151990}
-  influenceRadius: 5
-  smoothFactor: 10
+  influenceRadius: 10
+  smoothFactor: 1
   debugText: {fileID: 1663491270}
   showDebug: 1
   useMouseInput: 1
@@ -17204,7 +17204,7 @@ MonoBehaviour:
   normalPulseAmount: 0
   normalPulseSpeed: 0.1
   changeAmount: 2
-  pulseLerpSpeed: 0.5
+  pulseLerpSpeed: 0.3
 --- !u!1 &1950404718
 GameObject:
   m_ObjectHideFlags: 0

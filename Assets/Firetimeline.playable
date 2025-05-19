@@ -182,11 +182,11 @@ MonoBehaviour:
   animationSpeed: 1
   increment: 0.1
   showGizmos: 1
-  vectorColor: {r: 0.7969931, g: 0.015686274, b: 1, a: 1}
+  vectorColor: {r: 1, g: 0, b: 0.03096056, a: 1}
   gizmoScale: 1
   modifyController: 1
-  tightness: 0
-  MinInfluence: 0.05
+  tightness: 1
+  MinInfluence: 1
   multiplier: 10
   AnimateTightness: 1
   TightnessOverTime:
@@ -266,7 +266,7 @@ MonoBehaviour:
     m_Start: 0
     m_ClipIn: 0
     m_Asset: {fileID: 7649169197933637629}
-    m_Duration: 60.4
+    m_Duration: 15.616666666666667
     m_TimeScale: 1
     m_ParentTrack: {fileID: -716337184957809249}
     m_EaseInDuration: 0
@@ -299,25 +299,7 @@ MonoBehaviour:
       m_RotationOrder: 4
     m_MixOutCurve:
       serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
+      m_Curve: []
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -368,7 +350,25 @@ MonoBehaviour:
       m_RotationOrder: 4
     m_MixOutCurve:
       serializedVersion: 2
-      m_Curve: []
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -383,10 +383,10 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: FlowField2DPlayableAsset
   - m_Version: 1
-    m_Start: 60.4
+    m_Start: 15.616666666666667
     m_ClipIn: 0
     m_Asset: {fileID: -2354773741120512077}
-    m_Duration: 60.4
+    m_Duration: 14.116666666666667
     m_TimeScale: 1
     m_ParentTrack: {fileID: -716337184957809249}
     m_EaseInDuration: 0
@@ -451,6 +451,126 @@ MonoBehaviour:
     m_PostExtrapolationTime: 0
     m_PreExtrapolationTime: 0
     m_DisplayName: FlowField2DPlayableAsset
+  - m_Version: 1
+    m_Start: 29.733333333333334
+    m_ClipIn: 0
+    m_Asset: {fileID: 5703058982655275499}
+    m_Duration: 14.116666666666667
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: -716337184957809249}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: FlowField2DPlayableAsset
+  - m_Version: 1
+    m_Start: 43.85
+    m_ClipIn: 0
+    m_Asset: {fileID: 4245466052372297747}
+    m_Duration: 15.616666666666667
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: -716337184957809249}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: FlowField2DPlayableAsset
   m_Markers:
     m_Objects: []
 --- !u!114 &11400000
@@ -488,6 +608,224 @@ MonoBehaviour:
   field: {fileID: 0}
   controller: {fileID: 0}
   emitter: {fileID: 0}
+--- !u!114 &4245466052372297747
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 636675a8224bb08429a84a0e7e2ad9a2, type: 3}
+  m_Name: FlowField2DPlayableAsset
+  m_EditorClassIdentifier: 
+  modifyField: 1
+  cols: 10
+  rows: 10
+  cellSize: 0.3
+  intensity: 1
+  perAxisBounds: 1
+  bounds: 0
+  boundsX: 2
+  boundsY: 2
+  closedBoundRamp: 0.46
+  animateField: 1
+  animationCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0.4237213
+      value: 0.5490494
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.86180264
+      value: 0.79561543
+      inSlope: 4.225735
+      outSlope: 4.225735
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.14969628
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  animationSpeed: 1
+  increment: 0.1
+  showGizmos: 1
+  vectorColor: {r: 0, g: 0.19600487, b: 1, a: 1}
+  gizmoScale: 1
+  modifyController: 1
+  tightness: 1
+  MinInfluence: 1
+  multiplier: 90
+  AnimateTightness: 1
+  TightnessOverTime:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0.4257155
+      outSlope: 0.4257155
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.9916687
+      value: 0.42216873
+      inSlope: 0.4257155
+      outSlope: 0.4257155
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  AnimateMultiplier: 1
+  MultiplierOverTime:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: -0.100486755
+      value: -0.0015258789
+      inSlope: 0.051282145
+      outSlope: 0.051282145
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 10.244438
+      value: 0.52898407
+      inSlope: 0.051282145
+      outSlope: 0.051282145
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  modifyEmitter: 1
+  emissionType: 2
+  coverage: 1
+--- !u!114 &5703058982655275499
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 636675a8224bb08429a84a0e7e2ad9a2, type: 3}
+  m_Name: FlowField2DPlayableAsset
+  m_EditorClassIdentifier: 
+  modifyField: 1
+  cols: 10
+  rows: 10
+  cellSize: 0.3
+  intensity: 1
+  perAxisBounds: 1
+  bounds: 0
+  boundsX: 0
+  boundsY: 0
+  closedBoundRamp: 1
+  animateField: 1
+  animationCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: -0.05000305
+      outSlope: -0.05000305
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0.94999695
+      inSlope: -0.05000305
+      outSlope: -0.05000305
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  animationSpeed: 1
+  increment: 0.1
+  showGizmos: 1
+  vectorColor: {r: 0, g: 1, b: 0.003575325, a: 1}
+  gizmoScale: 1
+  modifyController: 1
+  tightness: 0.851
+  MinInfluence: 0.891
+  multiplier: 1
+  AnimateTightness: 1
+  TightnessOverTime:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  AnimateMultiplier: 1
+  MultiplierOverTime:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  modifyEmitter: 1
+  emissionType: 1
+  coverage: 0.594
 --- !u!114 &7649169197933637629
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -503,7 +841,7 @@ MonoBehaviour:
   modifyField: 1
   cols: 10
   rows: 10
-  cellSize: 0.6
+  cellSize: 0.3
   intensity: 1
   perAxisBounds: 1
   bounds: 0

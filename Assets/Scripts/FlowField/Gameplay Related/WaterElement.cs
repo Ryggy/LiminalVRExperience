@@ -24,18 +24,18 @@ public class WaterElement : ElementBase
         }
     }
 
-    public override void DrawGizmos(Vector2[,] vectors, int cols, int rows, float scale, FlowFieldTest flowFieldTest)
-    {
-        Gizmos.color = Color.cyan;
-
-        for (int y = 0; y < rows; y++)
-        {
-            for (int x = 0; x < cols; x++)
-            {
-                Vector3 pos = new Vector3(x * scale, y * scale, 0) + flowFieldTest.transform.position;
-                Gizmos.DrawLine(pos, pos + (Vector3)vectors[x, y] * scale);
-            }
-        }
-    }
+    // public override void DrawGizmos(Vector2[,] vectors, int cols, int rows, float scale, FlowFieldTest flowFieldTest)
+    // {
+    //     Gizmos.color = Color.cyan;
+    //
+    //     for (int y = 0; y < rows; y++)
+    //     {
+    //         for (int x = 0; x < cols; x++)
+    //         {
+    //             Vector3 pos = new Vector3(x * scale, y * scale, 0) + flowFieldTest.transform.position;
+    //             Gizmos.DrawLine(pos, pos + (Vector3)vectors[x, y] * scale);
+    //         }
+    //     }
+    // }
     
 }

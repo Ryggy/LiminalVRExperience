@@ -278,12 +278,6 @@ Transform:
   m_Father: {fileID: 1676988090}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!20 &1046032664 stripped
-Camera:
-  m_CorrespondingSourceObject: {fileID: 1260162969970794154, guid: 22276a8657744e04cba8ad0a2caf4195,
-    type: 3}
-  m_PrefabInstance: {fileID: 141072767}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1147691289
 GameObject:
   m_ObjectHideFlags: 0
@@ -348,6 +342,7 @@ MonoBehaviour:
   linePrefab: {fileID: 3655737044839369495, guid: 5bec4c9262444174e8ad90a3986e7007,
     type: 3}
   arrowScale: 0.5
+  debugVector: 0
 --- !u!1 &1660336765
 GameObject:
   m_ObjectHideFlags: 0
@@ -391,9 +386,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b4e16bd6d723b4498d0e208f0459b6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  flowField: {fileID: 1147691291}
-  mainCam: {fileID: 1046032664}
-  modificationIntensity: 0.1
+  flowField: {fileID: 0}
 --- !u!1 &1676988087
 GameObject:
   m_ObjectHideFlags: 0

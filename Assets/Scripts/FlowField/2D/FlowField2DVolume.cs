@@ -21,11 +21,14 @@ public class FlowField2DVolume : MonoBehaviour
     public int cols = 60;
     public int rows = 40;
     [FormerlySerializedAs("scale")] public float cellSize = 10f;
-    
     public float increment = 0.1f;
     
-     [FormerlySerializedAs("vectors")] [SerializeField]
-    public Vector2[] vectorData;
+    [SerializeField] public Vector2[] vectorData;
+    private Vector2[] originalVectorData;
+    private Vector2[] workingVectorData;
+    
+    // Decay
+    [Range(0f, 5f)] public float decayRate = 0.1f;
     
     // Bounds
     public enum BoundsType2D
@@ -63,15 +66,14 @@ public class FlowField2DVolume : MonoBehaviour
     void Awake()
     {
         vectorData = new Vector2[cols * rows];
-
+    }
+    
+    void Start()
+    {
         if (loadFromFile && !string.IsNullOrEmpty(fgaFileName))
         {
-            Debug.Log("Trying to load FGA file: " + fgaFileName);
+            //Debug.Log("Trying to load FGA file: " + fgaFileName);
             StartCoroutine(LoadFGA(fgaFileName));
-        }
-        else
-        {
-            Debug.LogWarning("FGA file not found or not assigned, falling back to procedural generation");
         }
     }
 
@@ -81,6 +83,14 @@ public class FlowField2DVolume : MonoBehaviour
         {
             zOffset += Time.deltaTime * animationSpeed;
             GenerateField();
+        }
+        
+        if (workingVectorData != null && originalVectorData != null)
+        {
+            for (int i = 0; i < workingVectorData.Length; i++)
+            {
+                workingVectorData[i] = Vector2.Lerp(workingVectorData[i], originalVectorData[i], Time.deltaTime * decayRate);
+            }
         }
     }
 
@@ -93,12 +103,20 @@ public class FlowField2DVolume : MonoBehaviour
         };
         activeBehaviour = behaviours[fieldType];
         vectorData = new Vector2[cols * rows];
+        originalVectorData = new Vector2[cols * rows];
+        workingVectorData = new Vector2[cols * rows];
     }
 
     public void GenerateField()
     {
         if (activeBehaviour == null) InitBehaviour();
         activeBehaviour.GenerateField(vectorData, cols, rows, cellSize, increment, zOffset);
+        
+        for (int i = 0; i < vectorData.Length; i++)
+        {
+            originalVectorData[i] = vectorData[i];
+            workingVectorData[i] = vectorData[i];
+        }
     }
 
     public Vector2 GetVectorAtWorldPosition(Vector2 worldPos)
@@ -121,7 +139,15 @@ public class FlowField2DVolume : MonoBehaviour
         int y = Mathf.Clamp(Mathf.FloorToInt(relative.y * rows), 0, rows - 1);
 
         int index = x + y * cols;
-        return vectorData[index] * borderIntensity * borderIntensity;
+        return workingVectorData[index] * borderIntensity * borderIntensity;
+    }
+  
+    public void SetForce(Vector2 gridPos, Vector2 direction)
+    {
+        int x = Mathf.Clamp((int)gridPos.x, 0, cols - 1);
+        int y = Mathf.Clamp((int)gridPos.y, 0, rows - 1);
+        int index = x + y * cols;
+        workingVectorData[index] = Vector2.Lerp(workingVectorData[index], direction.normalized, 0.5f);
     }
     
     private float ApplyBounds(float rel, BoundsType2D mode, ref float borderIntensity)
@@ -195,6 +221,8 @@ public class FlowField2DVolume : MonoBehaviour
         cols = xSize;
         rows = ySize;
         vectorData = new Vector2[cols * rows];
+        originalVectorData = new Vector2[cols * rows];
+        workingVectorData = new Vector2[cols * rows];
 
         int lineIndex = 3; // skip size, min, max
         for (int z = 0; z < zSize; z++)
@@ -214,6 +242,8 @@ public class FlowField2DVolume : MonoBehaviour
 
                     int index = x + y * cols;
                     vectorData[index] = new Vector2(rawVec.x, rawVec.y);
+                    originalVectorData[index] = vectorData[index];
+                    workingVectorData[index] = vectorData[index];
                 }
             }
         }
@@ -223,7 +253,7 @@ public class FlowField2DVolume : MonoBehaviour
     
     void OnDrawGizmos()
     {
-        if (!showGizmos || vectorData == null) return;
+        if (!showGizmos || workingVectorData == null) return;
 
         Gizmos.color = vectorColor;
 
@@ -231,7 +261,7 @@ public class FlowField2DVolume : MonoBehaviour
         for (int x = 0; x < cols; x++)
         {
             int index = x + y * cols;
-            Vector2 dir = vectorData[index];
+            Vector2 dir = workingVectorData[index];
             if (dir.sqrMagnitude < 0.001f) continue;
 
             Vector3 pos = new Vector3(x * cellSize, y * cellSize, 0) + transform.position;

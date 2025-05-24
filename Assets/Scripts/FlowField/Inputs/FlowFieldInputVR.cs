@@ -232,6 +232,14 @@ public class FlowFieldInputVR : MonoBehaviour
         if (playOnlyOnceEver)
             _hasPlayedOnceEver = true;
     }
+    
+    private void OnEnable()
+    {
+        if (audioSource != null && !audioSource.isPlaying)
+        {
+            audioSource.Play();
+        }
+    }
     private void OnDisable()
     {
         if (audioSource != null && audioSource.isPlaying)

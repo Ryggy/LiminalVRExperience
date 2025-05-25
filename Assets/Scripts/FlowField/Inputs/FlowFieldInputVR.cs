@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using Liminal.SDK.VR;
 using Liminal.SDK.VR.Input;
 using TMPro;
@@ -6,10 +7,16 @@ using TMPro;
 public class FlowFieldInputVR : MonoBehaviour
 {
     [Header("Flow Field Settings")]
-    public FlowFieldTest flowField;
+    public FlowField2DVolume  flowField;
     public int influenceRadius = 1;
     public float smoothFactor = 10f;
 
+    [Header("Audio")]
+    public AudioSource audioSource;
+    public List<AudioClip> inputSFXClips = new List<AudioClip>();
+    [Range(0.8f, 1.2f)] public float minPitch = 0.95f;
+    [Range(0.8f, 1.2f)] public float maxPitch = 1.05f;
+    
     [Header("Debugging")]
     public TextMeshProUGUI debugText;
     public bool showDebug = true;
@@ -28,7 +35,7 @@ public class FlowFieldInputVR : MonoBehaviour
     private void Start()
     {
         if (flowField == null)
-            flowField = GetComponent<FlowFieldTest>();
+            flowField = GetComponent<FlowField2DVolume>();
 
         if (useMouseInput && mainCamera == null)
             FindNonVRCamera();
@@ -73,6 +80,8 @@ public class FlowFieldInputVR : MonoBehaviour
                     _isDragging = true;
                     _previousDragDirection = Vector2.zero;
                     message += "Trigger Down\n";
+
+                    PlayInputSFX();
                 }
 
                 if (_isDragging)
@@ -128,6 +137,8 @@ public class FlowFieldInputVR : MonoBehaviour
                     _isDragging = true;
                     _previousDragDirection = Vector2.zero;
                     message += "Mouse Down\n";
+
+                    PlayInputSFX();
                 }
 
                 if (_isDragging)
@@ -157,11 +168,21 @@ public class FlowFieldInputVR : MonoBehaviour
         }
     }
 
+    private void PlayInputSFX()
+    {
+        if (audioSource == null || inputSFXClips == null || inputSFXClips.Count == 0)
+            return;
+
+        audioSource.pitch = Random.Range(minPitch, maxPitch);
+        var clip = inputSFXClips[Random.Range(0, inputSFXClips.Count)];
+        audioSource.PlayOneShot(clip);
+    }
+    
     private bool TryWorldToGrid(Vector3 worldPos, out Vector2 gridPos)
     {
         Vector2 localPos = worldPos - (Vector3)flowField.transform.position;
-        int x = Mathf.FloorToInt(localPos.x / flowField.scale);
-        int y = Mathf.FloorToInt(localPos.y / flowField.scale);
+        int x = Mathf.FloorToInt(localPos.x / flowField.cellSize);
+        int y = Mathf.FloorToInt(localPos.y / flowField.cellSize);
 
         bool valid = x >= 0 && x < flowField.cols && y >= 0 && y < flowField.rows;
         gridPos = new Vector2(Mathf.Clamp(x, 0, flowField.cols - 1), Mathf.Clamp(y, 0, flowField.rows - 1));
@@ -207,8 +228,8 @@ public class FlowFieldInputVR : MonoBehaviour
         if (flowField == null) return;
 
         Gizmos.color = Color.yellow;
-        Vector3 center = flowField.transform.position + new Vector3(flowField.cols * flowField.scale / 2f, flowField.rows * flowField.scale / 2f, 0f);
-        Vector3 size = new Vector3(flowField.cols * flowField.scale, flowField.rows * flowField.scale, 0.1f);
+        Vector3 center = flowField.transform.position + new Vector3(flowField.cols * flowField.cellSize / 2f, flowField.rows * flowField.cellSize / 2f, 0f);
+        Vector3 size = new Vector3(flowField.cols * flowField.cellSize, flowField.rows * flowField.cellSize, 0.1f);
         Gizmos.DrawWireCube(center, size);
 
         if (Application.isPlaying && useMouseInput && mainCamera != null)

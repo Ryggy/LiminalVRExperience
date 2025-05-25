@@ -14,6 +14,8 @@ public class FlowFieldsInputAdvancedVR : MonoBehaviour
 
     public Camera mainCamera;
 
+    public GameController gameController
+
     private Vector3 _startWorldPos;
     private bool _isDragging = false;
     private Vector2 _previousDragDirection = Vector2.zero;
@@ -62,6 +64,8 @@ public class FlowFieldsInputAdvancedVR : MonoBehaviour
                     _startWorldPos = hitPos;
                     _isDragging = true;
                     _previousDragDirection = Vector2.zero;
+
+                    gameController.isInteracting = true;
                 }
 
                 if (_isDragging)
@@ -82,6 +86,7 @@ public class FlowFieldsInputAdvancedVR : MonoBehaviour
             else
             {
                 message += "Grid Position: Out of bounds\n";
+                gameController.isInteracting = false;
             }
         }
     }

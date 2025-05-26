@@ -1,5 +1,10 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/StreamingAssets/Air_OscillatingFlow.fga.meta
 guid: fd8bed26ca5fc7745902afbabab91ca1
+========
+guid: e5182f99d5fe781449dae846260305b4
+folderAsset: yes
+>>>>>>>> 439cf58fe1095f023d07d0439bfd6ed97f2839e2:Assets/Scripts/Kira.meta
 DefaultImporter:
   externalObjects: {}
   userData: 

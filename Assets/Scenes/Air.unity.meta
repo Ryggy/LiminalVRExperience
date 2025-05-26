@@ -1,5 +1,10 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Scenes/Air.unity.meta
 guid: b1d37c737e7493045905f879ee8237a4
+========
+guid: 44c1a6349aeddcc488dd52eb3eaaf699
+folderAsset: yes
+>>>>>>>> 439cf58fe1095f023d07d0439bfd6ed97f2839e2:Assets/Scenes/Kira_ArtMuseum.meta
 DefaultImporter:
   externalObjects: {}
   userData: 

@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/StreamingAssets/Air_Updraft.fga.meta
 guid: e57b29299e36f3740a32f1bb38c37cf6
+========
+guid: 7597bc0aff9f3fb4abf8cc4fc0b068e7
+>>>>>>>> 439cf58fe1095f023d07d0439bfd6ed97f2839e2:Assets/Scenes/Test3DFlowField - Copy.unity.meta
 DefaultImporter:
   externalObjects: {}
   userData: 

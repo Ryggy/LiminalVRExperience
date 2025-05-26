@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/StreamingAssets/Air_TurbulentBreeze.fga.meta
 guid: c10ffd4a7a25b3042a89934a32f604c2
+========
+guid: 3b32f8bf0cfbe51418ac71fba092713c
+>>>>>>>> 439cf58fe1095f023d07d0439bfd6ed97f2839e2:Assets/Scenes/Kira_ArtMuseum.unity.meta
 DefaultImporter:
   externalObjects: {}
   userData: 

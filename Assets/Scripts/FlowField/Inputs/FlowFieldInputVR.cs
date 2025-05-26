@@ -57,14 +57,16 @@ public class FlowFieldInputVR : MonoBehaviour
 
         string message = "";
 
+        if (RightHandInput?.Pointer != null)
+        {
+            HandleVRInput(ref message);
+        }
+        
         if (useMouseInput && mainCamera != null)
         {
             HandleMouseInput(ref message);
         }
-        else if (RightHandInput?.Pointer != null)
-        {
-            HandleVRInput(ref message);
-        }
+
 
         if (debugText != null && showDebug)
             debugText.text = message;

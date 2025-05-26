@@ -18,6 +18,7 @@ public struct ArtExperience
 {
     [SerializeField]public CurrentExperience experience;
     [SerializeField]public PlayableAsset timeline;
+    [SerializeField]public float experienceLength;
     [SerializeField]public Color startColor;
     [SerializeField]public Color endColor;
     [SerializeField]public AudioClip audioAmbient;
@@ -30,12 +31,15 @@ public class GameController : MonoBehaviour
     public PlayableDirector playableDirector;
     public AudioManager audioManager;
 
-    private int experienceIndex = -1;
+    public Color currentColour;
+    private int experienceIndex = 3;
     private Color startColor;
     private Color endColor;
 
     [SerializeField]
     public List<ArtExperience> experiences = new List<ArtExperience>();
+
+    public List<Renderer> emissives = new List<Renderer>();
 
 
     //call this when the player starts or stops interacting with the flowfield
@@ -52,16 +56,25 @@ public class GameController : MonoBehaviour
                 playableDirector.time += Time.deltaTime;
         }
         playableDirector.Evaluate();
+
+        currentColour = Color.Lerp(startColor, endColor, (1/experiences[experienceIndex].experienceLength) * (float)playableDirector.time);
+        RenderSettings.fogColor = currentColour;
+
+        foreach(Renderer renderer in emissives)
+        {
+            //renderer.material.color = currentColour;
+            renderer.material.SetColor("_EmissionColor", currentColour);
+        }
     }
 
     public void EnterNextExperience()
     {
-        experienceIndex++;
-        if(experienceIndex > experiences.Count-1) {experienceIndex = 0;}
+        Debug.Log("boop");
+        experienceIndex--;
+        if(experienceIndex < 0) {experienceIndex = 2;}
         playableDirector.time = 0;
         playableDirector.playableAsset = experiences[experienceIndex].timeline;
-        audioManager.audioAmbientClip = experiences[experienceIndex].audioAmbient;
-        audioManager.audioInteractClip = experiences[experienceIndex].audioInteract;
+        audioManager.UpdateAudioClips(experiences[experienceIndex].audioAmbient, experiences[experienceIndex].audioInteract);
         startColor = experiences[experienceIndex].startColor;
         endColor = experiences[experienceIndex].endColor;
     }

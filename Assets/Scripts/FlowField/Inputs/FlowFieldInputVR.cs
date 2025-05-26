@@ -6,6 +6,8 @@ using TMPro;
 
 public class FlowFieldInputVR : MonoBehaviour
 {
+    public GameController gameController;
+
     [Header("Flow Field Settings")]
     public FlowField2DVolume  flowField;
     public int influenceRadius = 1;
@@ -67,7 +69,11 @@ public class FlowFieldInputVR : MonoBehaviour
         }
 
         if (debugText != null && showDebug)
+        {
             debugText.text = message;
+        }
+
+        gameController.playerIsInteracting = _isDragging; 
     }
 
     private void HandleVRInput(ref string message)
@@ -133,6 +139,7 @@ public class FlowFieldInputVR : MonoBehaviour
         else
         {
             message += "Pointer not hitting any valid collider\n";
+            gameController.playerIsInteracting = false;
         }
     }
 
@@ -155,6 +162,7 @@ public class FlowFieldInputVR : MonoBehaviour
                 {
                     _startWorldPos = hitPos;
                     _isDragging = true;
+
                     _previousDragDirection = Vector2.zero;
                     message += "Mouse Down\n";
 

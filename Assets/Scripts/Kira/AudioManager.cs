@@ -6,6 +6,9 @@ public class AudioManager : MonoBehaviour
 {
     
     [SerializeField] AudioSource audioInteract;
+    [SerializeField] AudioSource audioAmbient;
+    public AudioClip audioInteractClip;
+    public AudioClip audioAmbientClip;
     [SerializeField] GameController gameController;
 
     void Start()

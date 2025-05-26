@@ -16,6 +16,15 @@ public class FlowFieldInputVR : MonoBehaviour
     public List<AudioClip> inputSFXClips = new List<AudioClip>();
     [Range(0.8f, 1.2f)] public float minPitch = 0.95f;
     [Range(0.8f, 1.2f)] public float maxPitch = 1.05f;
+    [Tooltip("If enabled, plays two audio clips simultaneously.")]
+    public bool playTwoClips = false;
+
+
+    [Tooltip("If enabled, only plays the input sound once for the entire session.")]
+    public bool playOnlyOnceEver = false;
+    public bool playOnlyOncePerPress = false;
+    private bool _hasPlayedThisPress = false;
+    private bool _hasPlayedOnceEver = false;
     
     [Header("Debugging")]
     public TextMeshProUGUI debugText;
@@ -81,7 +90,18 @@ public class FlowFieldInputVR : MonoBehaviour
                     _previousDragDirection = Vector2.zero;
                     message += "Trigger Down\n";
 
-                    PlayInputSFX();
+                    if (!playOnlyOncePerPress || !_hasPlayedThisPress)
+                    {
+                        PlayInputSFX();
+                        _hasPlayedThisPress = true;
+                    }
+                }
+
+                if (RightHandInput.GetButtonUp(VRButton.Trigger))
+                {
+                    _isDragging = false;
+                    _hasPlayedThisPress = false;
+                    message += "Trigger Up\n";
                 }
 
                 if (_isDragging)
@@ -138,7 +158,18 @@ public class FlowFieldInputVR : MonoBehaviour
                     _previousDragDirection = Vector2.zero;
                     message += "Mouse Down\n";
 
-                    PlayInputSFX();
+                    if (!playOnlyOncePerPress || !_hasPlayedThisPress)
+                    {
+                        PlayInputSFX();
+                        _hasPlayedThisPress = true;
+                    }
+                }
+
+                if (Input.GetMouseButtonUp(0))
+                {
+                    _isDragging = false;
+                    _hasPlayedThisPress = false;
+                    message += "Mouse Up\n";
                 }
 
                 if (_isDragging)
@@ -170,12 +201,51 @@ public class FlowFieldInputVR : MonoBehaviour
 
     private void PlayInputSFX()
     {
+        if (_hasPlayedOnceEver && playOnlyOnceEver)
+            return;
+
         if (audioSource == null || inputSFXClips == null || inputSFXClips.Count == 0)
             return;
 
         audioSource.pitch = Random.Range(minPitch, maxPitch);
-        var clip = inputSFXClips[Random.Range(0, inputSFXClips.Count)];
-        audioSource.PlayOneShot(clip);
+
+        if (!playTwoClips || inputSFXClips.Count == 1)
+        {
+            // Play only one random clip
+            var clip = inputSFXClips[Random.Range(0, inputSFXClips.Count)];
+            audioSource.PlayOneShot(clip);
+        }
+        else
+        {
+            // Play two different clips at once
+            var clip1Index = Random.Range(0, inputSFXClips.Count);
+            var clip2Index = clip1Index;
+
+            // Ensure second clip is different
+            while (clip2Index == clip1Index && inputSFXClips.Count > 1)
+                clip2Index = Random.Range(0, inputSFXClips.Count);
+
+            audioSource.PlayOneShot(inputSFXClips[clip1Index]);
+            audioSource.PlayOneShot(inputSFXClips[clip2Index]);
+        }
+
+        if (playOnlyOnceEver)
+            _hasPlayedOnceEver = true;
+    }
+    
+    private void OnEnable()
+    {
+        if (audioSource != null && !audioSource.isPlaying)
+        {
+            audioSource.Play();
+        }
+    }
+    private void OnDisable()
+    {
+        if (audioSource != null && audioSource.isPlaying)
+        {
+            audioSource.Stop();
+        }
     }
     
     private bool TryWorldToGrid(Vector3 worldPos, out Vector2 gridPos)
